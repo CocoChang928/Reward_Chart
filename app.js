@@ -775,7 +775,7 @@
 
     async function fetchGithubStars() {
         try {
-            const res = await fetch('https://api.github.com/repos/vc103/Reward_Chart');
+            const res = await fetch('https://api.github.com/repos/CocoChang928/Reward_Chart');
             if (!res.ok) {
                 const textEl = document.querySelector('.github-star-btn .star-text');
                 if (textEl) textEl.textContent = `（尚未上傳 GitHub）`;
