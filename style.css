@@ -1059,8 +1059,8 @@ body::after {
 }
 .mobile-menu-backdrop.open { display: block; }
 
-/* ===== Mobile Layout ===== */
-@media (max-width: 640px) {
+/* ===== Mobile Layout (phone + tablet/iPad) ===== */
+@media (max-width: 900px) {
     .ctrl-pill-group { display: none; }
     .hamburger-btn { display: flex; }
     .github-star-btn { display: none !important; }
