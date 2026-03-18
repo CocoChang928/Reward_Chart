@@ -84,6 +84,7 @@
     function setupReadOnlyUI() {
         document.getElementById('top-controls').style.display = 'none';
         document.getElementById('readonly-banner').style.display = 'block';
+        document.body.classList.add('readonly-mode');
     }
 
     function setupParentUI() {
