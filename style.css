@@ -996,16 +996,16 @@ body::after {
 .share-btn { background: #64b5f6; color: white; }
 
 .readonly-banner {
-    position: fixed;
+    position: sticky;
     top: 0; left: 0; right: 0;
     background: #ff9800;
     color: white;
     text-align: center;
-    padding: 12px;
+    padding: 10px;
     font-weight: bold;
     z-index: 2000;
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    font-size: 1.1rem;
+    font-size: 0.95rem;
 }
 
 /* Sync Overlay */
