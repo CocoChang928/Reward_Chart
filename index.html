@@ -37,24 +37,32 @@
     </button>
     <div id="star-burst-container"></div>
 
-    <!-- Top Controls / Mobile Bottom Bar -->
+    <!-- Top Controls -->
     <div class="top-controls" id="top-controls">
-        <button id="setup-btn" class="control-btn setup-btn">
-            <span class="btn-icon">⚙️</span><span class="btn-label">設定</span>
-        </button>
-        <button id="toggle-view-btn" class="control-btn toggle-view-btn">
-            <span class="btn-icon">📋</span><span class="btn-label">清單</span>
-        </button>
-        <button id="share-btn" class="control-btn share-btn">
-            <span class="btn-icon">📱</span><span class="btn-label">分享</span>
-        </button>
-        <button id="export-pdf-btn" class="control-btn pdf-btn">
-            <span class="btn-icon">📄</span><span class="btn-label">PDF</span>
-        </button>
-        <button id="reset-btn" class="control-btn reset-ctrl-btn">
-            <span class="btn-icon">🔄</span><span class="btn-label">重設</span>
+        <!-- Desktop: pill buttons row -->
+        <div class="ctrl-pill-group" id="ctrl-pill-group">
+            <button id="setup-btn" class="control-btn setup-btn">⚙️ 設定</button>
+            <button id="toggle-view-btn" class="control-btn toggle-view-btn">📋 清單</button>
+            <button id="share-btn" class="control-btn share-btn">📱 分享</button>
+            <button id="export-pdf-btn" class="control-btn pdf-btn">📄 PDF</button>
+            <button id="reset-btn" class="control-btn reset-ctrl-btn">🔄 重設</button>
+        </div>
+        <!-- Mobile: hamburger -->
+        <button class="hamburger-btn" id="hamburger-btn" aria-label="選單">
+            <span></span><span></span><span></span>
         </button>
     </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <button id="m-setup-btn" class="mobile-menu-item">⚙️ 家長設定</button>
+        <button id="m-toggle-btn" class="mobile-menu-item">📋 清單模式</button>
+        <button id="m-share-btn" class="mobile-menu-item">📱 分享（唯讀）</button>
+        <button id="m-pdf-btn" class="mobile-menu-item">📄 匯出 PDF</button>
+        <button id="m-reset-btn" class="mobile-menu-item danger">🔄 重新開始</button>
+    </div>
+    <div class="mobile-menu-backdrop" id="mobile-menu-backdrop"></div>
+
 
     <!-- Banner -->
     <header class="banner" id="banner">

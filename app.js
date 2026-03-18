@@ -372,6 +372,53 @@
         
         // GitHub Star
         document.getElementById('github-star-btn').addEventListener('click', triggerGithubStar);
+
+        // ===== Hamburger Menu =====
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const backdrop = document.getElementById('mobile-menu-backdrop');
+
+        function openHamburger() {
+            hamburgerBtn.classList.add('open');
+            mobileMenu.classList.add('open');
+            backdrop.classList.add('open');
+        }
+        function closeHamburger() {
+            hamburgerBtn.classList.remove('open');
+            mobileMenu.classList.remove('open');
+            backdrop.classList.remove('open');
+        }
+
+        if (hamburgerBtn) hamburgerBtn.addEventListener('click', () => {
+            mobileMenu.classList.contains('open') ? closeHamburger() : openHamburger();
+        });
+        if (backdrop) backdrop.addEventListener('click', closeHamburger);
+
+        // Mobile menu items — mirror desktop actions
+        const mSetup = document.getElementById('m-setup-btn');
+        const mToggle = document.getElementById('m-toggle-btn');
+        const mShare  = document.getElementById('m-share-btn');
+        const mPdf    = document.getElementById('m-pdf-btn');
+        const mReset  = document.getElementById('m-reset-btn');
+
+        if (mSetup)  mSetup.addEventListener('click',  () => { closeHamburger(); openSetupModal(); });
+        if (mToggle) mToggle.addEventListener('click', () => {
+            closeHamburger();
+            toggleView();
+            // sync label
+            mToggle.textContent = currentView === 'list' ? '🏆 印章模式' : '📋 清單模式';
+        });
+        if (mShare)  mShare.addEventListener('click',  () => { closeHamburger(); openShareModal(); });
+        if (mPdf)    mPdf.addEventListener('click',    () => { closeHamburger(); exportToPDF(); });
+        if (mReset)  mReset.addEventListener('click',  () => {
+            closeHamburger();
+            if (confirm('⚠️ 確定要重新開始嗎？\n\n所有小朋友的資料、印章紀錄都會被清除！')) {
+                localStorage.removeItem(STORAGE_KEY);
+                state = { children: [] };
+                renderAllCharts();
+                showWelcomeScreen(true);
+            }
+        });
     }
 
     // ===== Stamp Logic =====
