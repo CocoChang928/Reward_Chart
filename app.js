@@ -88,6 +88,20 @@
         const banner = document.getElementById('readonly-banner');
         banner.style.display = 'flex';
         document.body.style.paddingTop = '48px';
+
+        // Check if user has their own data
+        const startOwnBtn = document.getElementById('readonly-start-own');
+        if (startOwnBtn) {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.children && parsed.children.length > 0) {
+                        startOwnBtn.textContent = '🏠 回到我的蓋章';
+                    }
+                }
+            } catch(e) {}
+        }
     }
 
     function setupParentUI() {
