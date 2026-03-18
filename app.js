@@ -224,7 +224,6 @@
             document.getElementById('setup-add-child').addEventListener('click', addSetupChildField);
 
             document.getElementById('share-btn').addEventListener('click', openShareModal);
-            document.getElementById('share-close').addEventListener('click', () => closeModal('share-modal'));
 
             const exportBtn = document.getElementById('export-pdf-btn');
             if (exportBtn) exportBtn.addEventListener('click', exportToPDF);
@@ -258,6 +257,9 @@
         
         const readonlyShareBtn = document.getElementById('readonly-share');
         if (readonlyShareBtn) readonlyShareBtn.addEventListener('click', openShareModal);
+
+        // Share modal close (works in both modes)
+        document.getElementById('share-close').addEventListener('click', () => closeModal('share-modal'));
 
         // Share copy button
         const copyBtn = document.getElementById('share-copy-btn');
