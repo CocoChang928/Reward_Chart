@@ -918,80 +918,8 @@ body::after {
     }
 }
 
-@media (max-width: 500px) {
-    .stamp-board {
-        grid-template-columns: repeat(5, 1fr);
-        gap: 6px;
-        padding: 10px;
-    }
 
-    .stamp-icon {
-        font-size: 1.2rem;
-    }
 
-    .milestone-rewards {
-        gap: 4px;
-    }
-
-    .milestone {
-        padding: 8px 10px;
-    }
-
-    .milestone-icon {
-        font-size: 1.4rem;
-    }
-
-    .character-image {
-        width: 120px;
-        height: 120px;
-    }
-
-    /* Modal mobile fixes */
-    .modal-content {
-        padding: 20px 16px;
-        max-height: 85vh;
-        overflow-y: auto;
-        width: 94%;
-    }
-    .modal-content h3 {
-        font-size: 1.1rem;
-        margin-bottom: 12px;
-    }
-    .detail-row {
-        flex-direction: column;
-        gap: 4px;
-    }
-    .detail-label {
-        min-width: unset;
-    }
-    .detail-value {
-        font-size: 0.9rem;
-    }
-    .modal-buttons {
-        flex-wrap: wrap;
-        gap: 6px;
-    }
-    .modal-btn {
-        font-size: 0.85rem;
-        padding: 8px 14px;
-    }
-    .replay-icon-btn {
-        width: 32px;
-        height: 32px;
-        font-size: 0.95rem;
-        align-self: flex-start;
-    }
-    .readonly-banner {
-        flex-direction: column;
-        gap: 6px;
-        font-size: 0.8rem;
-        padding: 6px 10px;
-    }
-    .readonly-actions {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-}
 
 /* ===== Print styles ===== */
 @media print {
@@ -1019,27 +947,176 @@ body::after {
 
 .top-controls {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 100;
+    top: 16px;
+    right: 16px;
+    z-index: 200;
     display: flex;
-    gap: 12px;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: nowrap;
 }
 
 .control-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     padding: 8px 16px;
     border-radius: 20px;
     border: none;
     font-family: inherit;
     font-weight: 700;
+    font-size: 0.85rem;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    transition: transform 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
 }
-.control-btn:hover { transform: scale(1.05); }
+.control-btn:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.18); }
+.control-btn:active { transform: scale(0.97); }
 
-.setup-btn { background: white; color: #5d4037; }
-.share-btn { background: #64b5f6; color: white; }
+.setup-btn     { background: white; color: #5d4037; }
+.toggle-view-btn { background: #7c4dff; color: white; }
+.share-btn     { background: #42a5f5; color: white; }
+.pdf-btn       { background: #ffb300; color: white; }
+.reset-ctrl-btn{ background: #ef5350; color: white; }
+
+/* Desktop: show full label */
+.btn-icon { display: inline; }
+.btn-label { display: inline; }
+
+/* ===== Mobile Bottom Tab Bar ===== */
+@media (max-width: 640px) {
+    body { padding-bottom: 72px; }
+    body.readonly-mode { padding-bottom: 0; }
+
+    .top-controls {
+        position: fixed;
+        bottom: 0; left: 0; right: 0; top: auto;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        box-shadow: 0 -2px 12px rgba(0,0,0,0.12);
+        display: flex;
+        justify-content: space-around;
+        align-items: stretch;
+        gap: 0;
+        padding: 0;
+        padding-bottom: env(safe-area-inset-bottom, 0);
+        border-radius: 0;
+        z-index: 500;
+    }
+
+    .control-btn {
+        flex: 1;
+        flex-direction: column;
+        gap: 2px;
+        padding: 8px 4px;
+        border-radius: 0;
+        font-size: 0.65rem;
+        box-shadow: none;
+        background: transparent !important;
+        color: #888 !important;
+        border: none;
+        font-weight: 600;
+    }
+    .control-btn:hover, .control-btn:active {
+        transform: none;
+        box-shadow: none;
+        background: #f5f5f5 !important;
+    }
+    .control-btn.active-tab {
+        color: #7c4dff !important;
+        border-top: 3px solid #7c4dff;
+    }
+    .setup-btn.active-tab     { color: #5d4037 !important; border-top-color: #5d4037; }
+    .toggle-view-btn.active-tab { color: #7c4dff !important; border-top-color: #7c4dff; }
+    .share-btn.active-tab     { color: #42a5f5 !important; border-top-color: #42a5f5; }
+    .pdf-btn.active-tab       { color: #ffb300 !important; border-top-color: #ffb300; }
+    .reset-ctrl-btn.active-tab { color: #ef5350 !important; border-top-color: #ef5350; }
+
+    .btn-icon { font-size: 1.4rem; line-height: 1; }
+    .btn-label { display: block; font-size: 0.6rem; margin-top: 1px; }
+
+    /* Compact banner, github btn hidden on mobile for space */
+    .github-star-btn { display: none !important; }
+
+    /* Banner compact */
+    .banner { padding: 8px 12px 4px; }
+    .banner h1 { font-size: 1.1rem; }
+    .banner-ribbon { padding: 8px 20px; }
+    .subtitle { font-size: 0.75rem; }
+
+    /* Charts full width */
+    .charts-container {
+        flex-direction: column;
+        padding: 8px 10px 10px;
+        gap: 10px;
+    }
+
+    /* Panel inner compact */
+    .panel-inner { padding: 12px 10px; }
+
+    /* Stamp grid smaller */
+    .stamp-board {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 4px;
+        padding: 8px;
+    }
+    .stamp-cell {
+        width: auto;
+        height: auto;
+        aspect-ratio: 1;
+        font-size: 0.7rem;
+    }
+    .stamp-icon { font-size: 1rem; }
+
+    /* Character image smaller */
+    .character-image { width: 80px; height: 80px; }
+
+    /* Readonly banner compact on mobile */
+    .readonly-banner {
+        flex-direction: column;
+        gap: 6px;
+        padding: 8px 10px;
+        font-size: 0.8rem;
+    }
+    .readonly-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+    }
+    .readonly-btn {
+        font-size: 0.75rem;
+        padding: 5px 10px;
+    }
+    body.readonly-mode { padding-top: 80px; }
+
+    /* Modal full-screen on mobile */
+    .modal-content {
+        width: 96%;
+        max-width: none;
+        padding: 18px 14px;
+        max-height: 88vh;
+        overflow-y: auto;
+        border-radius: 16px;
+    }
+    .modal-content h3 { font-size: 1rem; margin-bottom: 10px; }
+    .detail-row { flex-direction: column; gap: 3px; }
+    .detail-label { min-width: unset; font-size: 0.8rem; }
+    .detail-value { font-size: 0.88rem; }
+    .modal-buttons {
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
+    .modal-btn {
+        flex: 1;
+        min-width: 100px;
+        font-size: 0.85rem;
+        padding: 10px 12px;
+        text-align: center;
+    }
+    .replay-icon-btn { align-self: flex-start; }
+}
 
 .readonly-banner {
     position: fixed;

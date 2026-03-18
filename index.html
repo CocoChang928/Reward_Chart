@@ -37,13 +37,23 @@
     </button>
     <div id="star-burst-container"></div>
 
-    <!-- Top Controls (Hidden in Read-Only Mode) -->
+    <!-- Top Controls / Mobile Bottom Bar -->
     <div class="top-controls" id="top-controls">
-        <button id="setup-btn" class="control-btn setup-btn">⚙️ 家長設定</button>
-        <button id="toggle-view-btn" class="control-btn" style="background:#7c4dff; color:white;">📋 清單模式</button>
-        <button id="share-btn" class="control-btn share-btn">📱 分享 (唯讀)</button>
-        <button id="export-pdf-btn" class="control-btn" style="background:#ffb300; color:white;">📄 匯出 PDF</button>
-        <button id="reset-btn" class="control-btn" style="background:#ef5350; color:white;">🔄 重新開始</button>
+        <button id="setup-btn" class="control-btn setup-btn">
+            <span class="btn-icon">⚙️</span><span class="btn-label">設定</span>
+        </button>
+        <button id="toggle-view-btn" class="control-btn toggle-view-btn">
+            <span class="btn-icon">📋</span><span class="btn-label">清單</span>
+        </button>
+        <button id="share-btn" class="control-btn share-btn">
+            <span class="btn-icon">📱</span><span class="btn-label">分享</span>
+        </button>
+        <button id="export-pdf-btn" class="control-btn pdf-btn">
+            <span class="btn-icon">📄</span><span class="btn-label">PDF</span>
+        </button>
+        <button id="reset-btn" class="control-btn reset-ctrl-btn">
+            <span class="btn-icon">🔄</span><span class="btn-label">重設</span>
+        </button>
     </div>
 
     <!-- Banner -->

@@ -267,19 +267,29 @@
 
     function toggleView() {
         currentView = (currentView === 'stamp') ? 'list' : 'stamp';
-        const label = currentView === 'stamp' ? '📋 清單模式' : '🏆 印章模式';
+        const isNowList = currentView === 'list';
 
+        // Update toggle-view-btn icon + label
         const parentBtn = document.getElementById('toggle-view-btn');
-        if (parentBtn) parentBtn.textContent = label;
-        const readonlyBtn = document.getElementById('readonly-toggle-view');
-        if (readonlyBtn) readonlyBtn.textContent = label;
+        if (parentBtn) {
+            const icon = parentBtn.querySelector('.btn-icon');
+            const lbl  = parentBtn.querySelector('.btn-label');
+            if (icon) icon.textContent = isNowList ? '🏆' : '📋';
+            if (lbl)  lbl.textContent  = isNowList ? '印章' : '清單';
+            parentBtn.classList.toggle('active-tab', isNowList);
+        }
 
-        if (currentView === 'list') {
+        // Update readonly toggle btn text
+        const readonlyBtn = document.getElementById('readonly-toggle-view');
+        if (readonlyBtn) readonlyBtn.textContent = isNowList ? '🏆 印章模式' : '📋 清單模式';
+
+        if (isNowList) {
             renderListView();
         } else {
             renderAllCharts();
         }
     }
+
 
     // ===== Event Bindings =====
     function bindEvents() {
