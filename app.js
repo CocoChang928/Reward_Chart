@@ -1,6 +1,6 @@
 /**
- * 🌟 冒險蓋章挑戰 - 繁體中文改版
- * 包含：動態小朋友設定、隱藏彩蛋、臉部辨識把關、雲端唯讀分享模式、GitHub 星星。
+ * 🌟 冒險蓋章挑戰 - 純前端版
+ * 100% 前端，所有資料存在 localStorage，分享透過壓縮 URL 參數。
  */
 
 (function () {
@@ -10,10 +10,7 @@
     const TOTAL_STAMPS = 30;
     const STORAGE_KEY = 'rewardChart_v3';
     const MILESTONE_VALUES = [10, 20, 30];
-    const NPOINT_API_BASE = 'https://api.npoint.io';
-    const FACE_API_MODELS = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/';
 
-    // Default Images / Icons
     const AVATAR_IMAGES = [
         'images/coco_bear.png',
         'images/barkley_dk.png',
@@ -32,31 +29,30 @@
         'images/dolphin_t_1773824690102.png'
     ];
     
-    // TTS phrases (Traditional Chinese)
     const PRAISE_PHRASES = [
         '做得很棒喔！', '你好棒！', '太厲害了！繼續加油！', '哇，真的很棒耶！', 
         '好優秀喔！', '你是最棒的！', '再接再厲！你可以的！', '表現得非常好！'
     ];
 
+    const ADVENTURE_TAGLINES = [
+        '的冒險旅程', '的奇幻挑戰', '的星球探險',
+        '的寶藏獵人', '的英雄任務', '的魔法世界',
+        '的勇氣之路', '的夢國探索', '的奇蹟之旅',
+        '的太空任務', '的叢林冒險', '的海底尋寶'
+    ];
+    let taglineIndex = 0;
+
     // ===== App State =====
-    let state = {
-        children: [], 
-        shareId: null, // ID used for npoint cloud save
-        parentFaceDescriptors: [] // Array of Float32Array representations
-    };
-    
+    let state = { children: [] };
     let isReadOnlyMode = false;
-    let pendingStampOperation = null; // { childId, index }
-    let audioCtx = null;
-    let faceApiLoaded = false;
+    let pendingStampOperation = null;
 
     // ===== Initialization =====
-    async function init() {
+    function init() {
         checkUrlForShareMode();
         
         if (isReadOnlyMode) {
             setupReadOnlyUI();
-            await fetchCloudState();
         } else {
             loadLocalState();
             setupParentUI();
@@ -65,20 +61,23 @@
         renderAllCharts();
         bindEvents();
         fetchGithubStars();
-
-        if (!isReadOnlyMode) {
-            // Load Face API in background for parent mode
-            loadFaceApiModels();
-        }
     }
 
     // ===== URL & State Management =====
     function checkUrlForShareMode() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const shareId = urlParams.get('share_id');
-        if (shareId) {
-            isReadOnlyMode = true;
-            state.shareId = shareId;
+        const hash = window.location.hash;
+        if (hash && hash.startsWith('#data=')) {
+            try {
+                const compressed = hash.substring(6);
+                const json = LZString.decompressFromEncodedURIComponent(compressed);
+                if (json) {
+                    const sharedState = JSON.parse(json);
+                    state.children = sharedState.children || [];
+                    isReadOnlyMode = true;
+                }
+            } catch (e) {
+                console.error('分享連結解碼失敗', e);
+            }
         }
     }
 
@@ -89,7 +88,6 @@
 
     function setupParentUI() {
         if (state.children.length === 0) {
-            // First time — show welcome screen
             showWelcomeScreen(true);
         }
     }
@@ -99,23 +97,12 @@
         document.getElementById('main-content').style.display = show ? 'none' : '';
     }
 
-    const ADVENTURE_TAGLINES = [
-        '的冒險旅程', '的奇幻挑戰', '的星球探險',
-        '的寶藏獵人', '的英雄任務', '的魔法世界',
-        '的勇氣之路', '的壓國探索', '的奇蹟之旅',
-        '的太空任務', '的叢林冒險', '的海底尋寶'
-    ];
-    let taglineIndex = 0;
-
     function createChild(name, avatar, color) {
         const subtitle = name + ADVENTURE_TAGLINES[taglineIndex % ADVENTURE_TAGLINES.length];
         taglineIndex++;
         return {
             id: 'child_' + Date.now() + Math.random().toString().slice(2,6),
-            name: name,
-            subtitle: subtitle,
-            avatar: avatar,
-            color: color,
+            name, subtitle, avatar, color,
             milestones: ['故事時間', '小點心', '超級大獎！'],
             stamps: new Array(TOTAL_STAMPS).fill(null)
         };
@@ -127,15 +114,7 @@
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = { ...state, ...parsed };
-                // Ensure arrays
                 if (!state.children) state.children = [];
-                // Migration
-                if (state.parentFaceDescriptor) {
-                    state.parentFaceDescriptors = [state.parentFaceDescriptor];
-                    delete state.parentFaceDescriptor;
-                    saveLocalState();
-                }
-                if (!state.parentFaceDescriptors) state.parentFaceDescriptors = [];
             }
         } catch (e) {
              console.warn('載入失敗', e);
@@ -145,59 +124,6 @@
     function saveLocalState() {
         if (isReadOnlyMode) return;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        syncToCloud();
-    }
-
-    // ===== Cloud Sync (nPoint) =====
-    const fetchWithTimeout = async (url, options = {}) => {
-        const { timeout = 8000 } = options;
-        const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), timeout);
-        try {
-            const response = await fetch(url, { ...options, signal: controller.signal });
-            clearTimeout(id);
-            return response;
-        } catch (error) {
-            clearTimeout(id);
-            throw error;
-        }
-    };
-
-    async function syncToCloud() {
-        if (!state.shareId) return; // Only sync if parent has created a share link
-        
-        try {
-            // Background sync (fire and forget)
-            fetchWithTimeout(`${NPOINT_API_BASE}/${state.shareId}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(state)
-            }).catch(e => console.error('Cloud Sync Error', e));
-        } catch(e) {
-            console.error('雲端同步例外', e);
-        }
-    }
-
-    async function fetchCloudState(isBackground = false) {
-        if (!isBackground) showSyncOverlay(true);
-        try {
-            const res = await fetchWithTimeout(`${NPOINT_API_BASE}/${state.shareId}`, { timeout: 8000 });
-            if (res.ok) {
-                const cloudState = await res.json();
-                state = cloudState;
-                renderAllCharts();
-            }
-        } catch (e) {
-            if (!isBackground) console.error('無法從雲端讀取資料。', e);
-        }
-        if (!isBackground) showSyncOverlay(false);
-        
-        // Auto refresh every 10 seconds in read only mode
-        setTimeout(() => fetchCloudState(true), 10000);
-    }
-
-    function showSyncOverlay(show) {
-        document.getElementById('sync-overlay').style.display = show ? 'flex' : 'none';
     }
 
     // ===== Render Engine =====
@@ -211,85 +137,65 @@
         }
 
         const template = document.getElementById('child-panel-template').content;
-        
+
         state.children.forEach(child => {
-            const clone = document.importNode(template, true);
+            const clone = template.cloneNode(true);
             const section = clone.querySelector('.chart-panel');
             section.dataset.childId = child.id;
+
+            section.querySelector('.child-name-display').textContent = child.name;
+            section.querySelector('.child-subtitle').textContent = child.subtitle || child.name + '的冒險旅程';
+            section.querySelector('.child-avatar-display').src = child.avatar;
             
-            // Apply colors
-            const inner = clone.querySelector('.panel-inner');
-            inner.style.border = `3px solid ${child.color}`;
-            inner.style.background = `linear-gradient(160deg, rgba(255,255,255,0.9), ${child.color}33)`;
+            const inner = section.querySelector('.panel-inner');
+            inner.style.borderColor = child.color;
             
-            clone.querySelector('.child-name-display').textContent = child.name;
-            clone.querySelector('.child-name-display').style.color = child.color;
-            clone.querySelector('.child-subtitle').textContent = child.subtitle || (child.name + '的冒險旅程');
-            clone.querySelector('.child-avatar-display').src = child.avatar;
-            clone.querySelector('.character-glow').style.background = `radial-gradient(circle, ${child.color}80, transparent 70%)`;
-            clone.querySelector('.child-progress').style.background = child.color;
-            
-            // Set Milestones
-            clone.querySelector('.m10-label').textContent = child.milestones?.[0] || '故事時間';
-            clone.querySelector('.m20-label').textContent = child.milestones?.[1] || '小點心';
-            clone.querySelector('.m30-label').textContent = child.milestones?.[2] || '超級大獎！';
-            
-            // Build Board
-            const board = clone.querySelector('.stamp-board');
-            for (let i = 0; i < TOTAL_STAMPS; i++) {
+            const board = section.querySelector('.stamp-board');
+            let stampedCount = 0;
+            child.stamps.forEach((stamp, i) => {
                 const cell = document.createElement('div');
                 cell.className = 'stamp-cell';
-                cell.dataset.index = i;
                 cell.dataset.childId = child.id;
+                cell.dataset.index = i;
                 
-                // Color tweaks based on child color
-                cell.style.borderColor = child.color;
+                if (stamp) {
+                    cell.classList.add('stamped');
+                    cell.innerHTML = `<span class="stamp-icon">⭐</span>`;
+                    stampedCount++;
+                } else {
+                    cell.innerHTML = `<span class="cell-number">${i + 1}</span>`;
+                }
                 
+                // Milestone markers
                 if (MILESTONE_VALUES.includes(i + 1)) {
                     cell.classList.add('milestone-cell');
                 }
-
-                const stampData = child.stamps[i];
-                if (stampData) {
-                    cell.classList.add('stamped');
-                    if (stampData.reason) cell.classList.add('has-detail');
-                    cell.style.background = child.color;
-                    cell.style.color = 'white';
-                    cell.innerHTML = '<span class="stamp-icon">⭐</span>';
-                    cell.title = `#${i+1} | ${stampData.time || ''} \n${stampData.reason || ''}`;
-                } else {
-                    cell.style.background = `${child.color}22`;
-                    cell.innerHTML = `<span class="stamp-number">${i+1}</span>`;
-                }
-                
                 board.appendChild(cell);
-            }
+            });
+
+            // Progress
+            const pct = (stampedCount / TOTAL_STAMPS) * 100;
+            section.querySelector('.child-progress').style.width = pct + '%';
+            section.querySelector('.child-count').textContent = `${stampedCount} / ${TOTAL_STAMPS}`;
+
+            // Milestones
+            const milestones = child.milestones || ['里程碑1', '里程碑2', '終極大獎'];
+            const ms = section.querySelector('.child-milestones');
+            ms.querySelector('.m10-label').textContent = milestones[0];
+            ms.querySelector('.m20-label').textContent = milestones[1];
+            ms.querySelector('.m30-label').textContent = milestones[2];
+            
+            MILESTONE_VALUES.forEach((val, idx) => {
+                if (stampedCount >= val) {
+                    ms.querySelector(`.m${val}`).classList.add('achieved');
+                }
+            });
 
             container.appendChild(clone);
-            updateChildProgressUI(child.id);
         });
     }
 
-    function updateChildProgressUI(childId) {
-        const child = state.children.find(c => c.id === childId);
-        if (!child) return;
-        
-        const stampedCount = child.stamps.filter(s => s !== null).length;
-        const panel = document.querySelector(`.chart-panel[data-child-id="${childId}"]`);
-        if (!panel) return;
-
-        panel.querySelector('.child-progress').style.width = `${(stampedCount / TOTAL_STAMPS) * 100}%`;
-        panel.querySelector('.child-count').textContent = `${stampedCount} / ${TOTAL_STAMPS}`;
-
-        MILESTONE_VALUES.forEach(val => {
-            const m = panel.querySelector(`.m${val}`);
-            if (m) {
-                m.classList.toggle('reached', stampedCount >= val);
-            }
-        });
-    }
-
-    // ===== Events =====
+    // ===== Event Bindings =====
     function bindEvents() {
         document.getElementById('main-content').addEventListener('click', e => {
             const cell = e.target.closest('.stamp-cell');
@@ -322,9 +228,9 @@
 
             // Reset button
             document.getElementById('reset-btn').addEventListener('click', () => {
-                if (confirm('⚠️ 確定要重新開始嗎？\n\n所有小朋友的資料、印章紀錄、家長臉部資料都會被清除！')) {
+                if (confirm('⚠️ 確定要重新開始嗎？\n\n所有小朋友的資料、印章紀錄都會被清除！')) {
                     localStorage.removeItem(STORAGE_KEY);
-                    state = { children: [], shareId: null, parentFaceDescriptors: [] };
+                    state = { children: [] };
                     renderAllCharts();
                     showWelcomeScreen(true);
                 }
@@ -335,157 +241,32 @@
                 showWelcomeScreen(false);
                 openSetupModal();
             });
+        }
 
-            // Face Auth
-            document.getElementById('face-auth-cancel').addEventListener('click', cancelFaceAuth);
-            document.getElementById('face-auth-register').addEventListener('click', () => registerFace());
-            document.getElementById('face-auth-register-2nd').addEventListener('click', () => registerFace());
-            document.getElementById('face-auth-reset').addEventListener('click', resetFaceAuth);
+        // Read-only: "start own" button
+        const startOwnBtn = document.getElementById('readonly-start-own');
+        if (startOwnBtn) {
+            startOwnBtn.addEventListener('click', () => {
+                window.location.href = window.location.origin + window.location.pathname;
+            });
+        }
+
+        // Share copy button
+        const copyBtn = document.getElementById('share-copy-btn');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => {
+                const input = document.getElementById('share-link-input');
+                input.select();
+                navigator.clipboard.writeText(input.value).then(() => {
+                    copyBtn.textContent = '✅ 已複製！';
+                    setTimeout(() => copyBtn.textContent = '📋 複製連結', 2000);
+                });
+            });
         }
         
         // GitHub Star
         document.getElementById('github-star-btn').addEventListener('click', triggerGithubStar);
     }
-
-    // ===== Face Authentication (Parent Only) =====
-    async function loadFaceApiModels() {
-        if (faceApiLoaded) return;
-        try {
-            await faceapi.nets.tinyFaceDetector.loadFromUri(FACE_API_MODELS);
-            await faceapi.nets.faceLandmark68Net.loadFromUri(FACE_API_MODELS);
-            await faceapi.nets.faceRecognitionNet.loadFromUri(FACE_API_MODELS);
-            faceApiLoaded = true;
-            console.log("Face API models loaded.");
-        } catch (e) {
-            console.error("Failed to load Face API models:", e);
-        }
-    }
-
-    let faceVideoStream = null;
-    let faceAuthInterval = null;
-    let faceAuthMode = 'verify'; // 'verify' or 'register'
-
-    async function promptFaceAuth(mode, onSuccessCallback) {
-        if (!faceApiLoaded) {
-            alert("臉部辨識模型載入中，請稍候...");
-            return;
-        }
-
-        faceAuthMode = mode;
-        const modal = document.getElementById('face-auth-modal');
-        const statusEl = document.getElementById('face-status');
-        const regBtn = document.getElementById('face-auth-register');
-        const reg2Btn = document.getElementById('face-auth-register-2nd');
-        const resBtn = document.getElementById('face-auth-reset');
-        
-        statusEl.textContent = "請看著鏡頭...";
-        
-        if (state.parentFaceDescriptors.length > 0 && mode !== 'register') {
-            regBtn.style.display = 'none';
-            reg2Btn.style.display = 'none';
-            resBtn.style.display = 'inline-block';
-        } else {
-            if (state.parentFaceDescriptors.length === 0) {
-                regBtn.style.display = 'inline-block';
-                reg2Btn.style.display = 'none';
-            } else if (state.parentFaceDescriptors.length === 1) {
-                regBtn.style.display = 'none';
-                reg2Btn.style.display = 'inline-block';
-            } else {
-                regBtn.style.display = 'none';
-                reg2Btn.style.display = 'none';
-            }
-            resBtn.style.display = (state.parentFaceDescriptors.length > 0) ? 'inline-block' : 'none';
-        }
-
-        modal.classList.add('active');
-
-        // Start video
-        const video = document.getElementById('face-video');
-        try {
-            faceVideoStream = await navigator.mediaDevices.getUserMedia({ video: {} });
-            video.srcObject = faceVideoStream;
-            
-            // Polling for detection
-            if (mode === 'verify') {
-                faceAuthInterval = setInterval(async () => {
-                    if (video.paused || video.ended) return;
-                    const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
-                                                  .withFaceLandmarks()
-                                                  .withFaceDescriptor();
-                    if (detection) {
-                        if (state.parentFaceDescriptors.length > 0) {
-                            let verified = false;
-                            for (let desc of state.parentFaceDescriptors) {
-                                const savedDescriptor = new Float32Array(desc);
-                                const distance = faceapi.euclideanDistance(detection.descriptor, savedDescriptor);
-                                if (distance < 0.5) { verified = true; break; }
-                            }
-                            if (verified) {
-                                statusEl.textContent = "辨識成功！✓";
-                                statusEl.style.color = "#4caf50";
-                                clearInterval(faceAuthInterval);
-                                setTimeout(() => {
-                                    cancelFaceAuth(); // closes modal and stops video
-                                    if (onSuccessCallback) onSuccessCallback();
-                                }, 500);
-                            } else {
-                                statusEl.textContent = "未能辨識為家長，請重試！";
-                                statusEl.style.color = "#f44336";
-                            }
-                        } else {
-                            // Quick register
-                            statusEl.textContent = "尚未註冊，請點擊「註冊為家長臉孔」";
-                        }
-                    }
-                }, 500);
-            }
-        } catch (err) {
-            console.error(err);
-            statusEl.textContent = "無法存取攝影機！";
-        }
-    }
-
-    async function registerFace() {
-        const video = document.getElementById('face-video');
-        const statusEl = document.getElementById('face-status');
-        statusEl.textContent = "正在捕捉臉部...";
-        
-        const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
-                                      .withFaceLandmarks()
-                                      .withFaceDescriptor();
-        if (detection) {
-            // Save as array to stringify
-            state.parentFaceDescriptors.push(Array.from(detection.descriptor));
-            saveLocalState();
-            statusEl.textContent = "註冊成功！";
-            statusEl.style.color = "#4caf50";
-            setTimeout(() => {
-                cancelFaceAuth();
-            }, 1000);
-        } else {
-            statusEl.textContent = "找不到臉部，請正對鏡頭！";
-            statusEl.style.color = "#f44336";
-        }
-    }
-
-    function resetFaceAuth() {
-        if(confirm("確定要重設所有家長臉孔資料嗎？")) {
-            state.parentFaceDescriptors = [];
-            saveLocalState();
-            cancelFaceAuth();
-            setTimeout(() => promptFaceAuth('register'), 300);
-        }
-    }
-
-    function cancelFaceAuth() {
-        if (faceAuthInterval) clearInterval(faceAuthInterval);
-        if (faceVideoStream) {
-            faceVideoStream.getTracks().forEach(t => t.stop());
-        }
-        document.getElementById('face-auth-modal').classList.remove('active');
-    }
-
 
     // ===== Stamp Logic =====
     function handleStampClick(cell) {
@@ -500,15 +281,7 @@
                 alert("唯讀模式中，只有家長可以蓋印章喔！");
                 return;
             }
-            // Require face auth to stamp!
-            if (state.parentFaceDescriptors.length === 0) {
-                alert("初次使用，請先設定家長臉孔。");
-                promptFaceAuth('register');
-            } else {
-                promptFaceAuth('verify', () => {
-                    openStampModal(childId, index);
-                });
-            }
+            openStampModal(childId, index);
         }
     }
 
@@ -547,7 +320,6 @@
         const stampedCount = child.stamps.filter(s => s !== null).length;
         speakPraise(child.name, child.stamps[index].reason, stampedCount);
         
-        // Check milestone
         if (MILESTONE_VALUES.includes(stampedCount)) {
             setTimeout(() => {
                 showCelebration(`太棒了！${child.name} 達成了 ${stampedCount} 個印章里程碑！`);
@@ -575,36 +347,22 @@
 
     function handleRemoveStamp() {
         if (!confirm('確定要取消這個印章嗎？')) return;
-        
-        // Require face auth to remove stamp
-        promptFaceAuth('verify', () => {
-            const { childId, index } = pendingStampOperation;
-            const child = state.children.find(c => c.id === childId);
-            child.stamps[index] = null;
-            
-            saveLocalState();
-            renderAllCharts();
-            closeModal('stamp-detail-view');
-        });
+        const { childId, index } = pendingStampOperation;
+        const child = state.children.find(c => c.id === childId);
+        child.stamps[index] = null;
+        saveLocalState();
+        renderAllCharts();
+        closeModal('stamp-detail-view');
     }
 
-    // ===== Easter Egg & Setup =====
+    // ===== Setup =====
     function openSetupModal() {
-        const doOpen = () => {
-            const list = document.getElementById('setup-children-list');
-            list.innerHTML = '';
-            state.children.forEach(child => {
-                list.appendChild(createSetupChildElement(child));
-            });
-            document.getElementById('setup-modal').classList.add('active');
-        };
-
-        // Skip face auth if no parent face registered yet (first-time user)
-        if (!state.parentFaceDescriptors || state.parentFaceDescriptors.length === 0) {
-            doOpen();
-        } else {
-            promptFaceAuth('verify', doOpen);
-        }
+        const list = document.getElementById('setup-children-list');
+        list.innerHTML = '';
+        state.children.forEach(child => {
+            list.appendChild(createSetupChildElement(child));
+        });
+        document.getElementById('setup-modal').classList.add('active');
     }
 
     function createSetupChildElement(child = { id: 'new_'+Date.now(), name: '', color: '#ffeb3b', avatar: AVATAR_IMAGES[2], milestones: ['故事時間','小點心','超級大獎！'] }) {
@@ -616,7 +374,6 @@
         div.style.borderRadius = '8px';
         div.dataset.id = child.id;
         
-        // Populate default milestones if array missing
         const m1 = child.milestones?.[0] || '故事時間';
         const m2 = child.milestones?.[1] || '小點心';
         const m3 = child.milestones?.[2] || '超級大獎！';
@@ -647,7 +404,6 @@
             </div>
         `;
 
-        // Avatar select logic
         div.querySelectorAll('.setup-avatar-opt').forEach(opt => {
             opt.addEventListener('click', (e) => {
                 div.querySelectorAll('.setup-avatar-opt').forEach(o => o.classList.remove('selected'));
@@ -655,11 +411,7 @@
             });
         });
 
-        // Delete logic
-        div.querySelector('.setup-child-del').addEventListener('click', () => {
-            div.remove();
-        });
-
+        div.querySelector('.setup-child-del').addEventListener('click', () => div.remove());
         return div;
     }
 
@@ -688,15 +440,10 @@
             const avatar = selectedAvatar ? selectedAvatar.dataset.src : AVATAR_IMAGES[0];
             const id = el.dataset.id;
             
-            // Retain old stamps if child existed
             let existingChild = state.children.find(c => c.id === id);
             const subtitle = existingChild?.subtitle || (name + ADVENTURE_TAGLINES[newChildren.length % ADVENTURE_TAGLINES.length]);
             newChildren.push({
-                id: id,
-                name: name,
-                subtitle: subtitle,
-                color: color,
-                avatar: avatar,
+                id, name, subtitle, color, avatar,
                 milestones: [m1, m2, m3],
                 stamps: existingChild ? existingChild.stamps : new Array(TOTAL_STAMPS).fill(null)
             });
@@ -714,36 +461,14 @@
         closeModal('setup-modal');
     }
 
-    async function openShareModal() {
-        if (!state.shareId) {
-            showSyncOverlay(true);
-            try {
-                // Create new bin
-                const res = await fetchWithTimeout(`${NPOINT_API_BASE}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(state),
-                    timeout: 8000
-                });
-                const data = await res.json();
-                state.shareId = data.id || data.url.split('/').pop(); // Handle missing id property
-                saveLocalState();
-            } catch(e) {
-                alert("目前無法連接免費雲端伺服器 nPoint，分享功能暫時無法使用。請稍後再試！");
-                showSyncOverlay(false);
-                return;
-            }
-            showSyncOverlay(false);
-        } else {
-            // Background update
-            fetchWithTimeout(`${NPOINT_API_BASE}/${state.shareId}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(state)
-            }).catch(e => console.error("Update fail:", e));
-        }
-
-        const shareLink = window.location.origin + window.location.pathname + '?share_id=' + state.shareId;
+    // ===== Share via URL =====
+    function openShareModal() {
+        // Compress state into URL
+        const shareData = { children: state.children };
+        const json = JSON.stringify(shareData);
+        const compressed = LZString.compressToEncodedURIComponent(json);
+        const shareLink = window.location.origin + window.location.pathname + '#data=' + compressed;
+        
         document.getElementById('share-link-input').value = shareLink;
         
         // Generate QR
@@ -776,14 +501,11 @@
         speakPraise(child.name, child.stamps[index].reason, index + 1);
     }
 
-    // ===== Star & Like Counter =====
-    const APP_LIKES_API = 'https://jsonblob.com/api/jsonBlob/019d008c-9833-75bf-b446-3530e1cd2a69';
-    const LIKE_STORAGE_KEY = 'reward_chart_liked';
-
-    async function triggerGithubStar() {
+    // ===== GitHub Star =====
+    function triggerGithubStar() {
         // Star burst animation
         const container = document.getElementById('star-burst-container');
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 15; i++) {
             const star = document.createElement('div');
             star.textContent = '⭐';
             star.style.position = 'fixed';
@@ -805,84 +527,31 @@
             ], { duration: 1000, easing: 'ease-out' }).onfinish = () => star.remove();
         }
 
-        // Check if already liked
-        if (localStorage.getItem(LIKE_STORAGE_KEY)) {
-            setTimeout(() => alert('您已經按過讚囉！感謝您的支持！⭐✨'), 800);
-            return;
-        }
-
-        // Increment cloud counter
-        try {
-            const res = await fetchWithTimeout(APP_LIKES_API, { timeout: 6000 });
-            if (res.ok) {
-                const data = await res.json();
-                const newCount = (data.stars || 0) + 1;
-                await fetchWithTimeout(APP_LIKES_API, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ stars: newCount }),
-                    timeout: 6000
-                });
-                localStorage.setItem(LIKE_STORAGE_KEY, 'true');
-                updateStarDisplay(null, newCount);
-                setTimeout(() => alert(`感謝您的支持！⭐✨\n\n您是第 ${newCount} 位按讚的人！\n您的鼓勵是我們最大的動力！`), 800);
-            }
-        } catch(e) {
-            console.error('Like counter error', e);
-            setTimeout(() => alert('感謝您的支持！⭐✨\n\n（按讚計數器暫時離線，但我們收到您的心意了！）'), 800);
-        }
-    }
-
-    function updateStarDisplay(githubStars, appLikes) {
-        const textEl = document.querySelector('.github-star-btn .star-text');
-        if (!textEl) return;
-        
-        let parts = [];
-        if (githubStars !== null && githubStars !== undefined) parts.push(`GitHub ⭐ ${githubStars}`);
-        if (appLikes !== null && appLikes !== undefined) parts.push(`👍 ${appLikes} 人按讚`);
-        
-        if (parts.length > 0) {
-            textEl.textContent = parts.join(' ｜ ');
-        }
+        // Open GitHub repo in new tab
+        setTimeout(() => {
+            window.open('https://github.com/CocoChang928/Reward_Chart', '_blank');
+        }, 600);
     }
 
     async function fetchGithubStars() {
-        let ghStars = null;
-        let appLikes = null;
-
-        // Fetch GitHub stars
         try {
-            const res = await fetchWithTimeout('https://api.github.com/repos/CocoChang928/Reward_Chart', { timeout: 5000 });
+            const res = await fetch('https://api.github.com/repos/CocoChang928/Reward_Chart');
             if (res.ok) {
                 const data = await res.json();
-                ghStars = data.stargazers_count ?? 0;
+                const textEl = document.querySelector('.github-star-btn .star-text');
+                if (textEl) textEl.textContent = `GitHub ⭐ ${data.stargazers_count ?? 0}`;
             }
         } catch (e) {
             console.error('GitHub API error', e);
         }
-
-        // Fetch App likes from JSONBlob
-        try {
-            const res = await fetchWithTimeout(APP_LIKES_API, { timeout: 5000 });
-            if (res.ok) {
-                const data = await res.json();
-                appLikes = data.stars ?? 0;
-            }
-        } catch (e) {
-            console.error('App likes fetch error', e);
-        }
-
-        updateStarDisplay(ghStars, appLikes);
     }
 
-    // ===== Utils =====
+    // ===== PDF Export =====
     function exportToPDF() {
-        // Build a clean list-style report
         const reportDiv = document.createElement('div');
         reportDiv.id = 'pdf-report';
         reportDiv.style.cssText = 'padding:20px; font-family:sans-serif; color:#333; background:white;';
 
-        // Title
         reportDiv.innerHTML = `
             <h1 style="text-align:center; color:#5d4037; margin-bottom:4px;">🌟 我們的冒險蓋章挑戰 🌟</h1>
             <p style="text-align:center; color:#888; font-size:0.85rem; margin-bottom:24px;">匯出日期：${new Date().toLocaleDateString('zh-TW')}</p>
@@ -926,22 +595,18 @@
             reportDiv.appendChild(section);
         });
 
-        // Append temporarily to body (hidden)
         document.body.appendChild(reportDiv);
 
-        const opt = {
-            margin:       0.3,
-            filename:     'Reward_Charts_Report.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true },
-            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-        };
-
-        html2pdf().set(opt).from(reportDiv).save().then(() => {
-            reportDiv.remove();
-        });
+        html2pdf().set({
+            margin: 0.3,
+            filename: 'Reward_Charts_Report.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        }).from(reportDiv).save().then(() => reportDiv.remove());
     }
 
+    // ===== Utils =====
     function closeModal(id) {
         document.getElementById(id).classList.remove('active');
     }
@@ -949,7 +614,6 @@
     function showCelebration(msg) {
         document.getElementById('celebration-message').textContent = msg;
         document.getElementById('celebration-overlay').classList.add('active');
-        // Simple confetti (reused from initial code)
         for (let i=0; i<30; i++) {
             let conf = document.createElement('div');
             conf.className = 'confetti';
