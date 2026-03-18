@@ -776,9 +776,12 @@
         speakPraise(child.name, child.stamps[index].reason, index + 1);
     }
 
-    // ===== Github Star =====
-    function triggerGithubStar() {
-        // Animation
+    // ===== Star & Like Counter =====
+    const APP_LIKES_API = 'https://jsonblob.com/api/jsonBlob/019d008c-9833-75bf-b446-3530e1cd2a69';
+    const LIKE_STORAGE_KEY = 'reward_chart_liked';
+
+    async function triggerGithubStar() {
+        // Star burst animation
         const container = document.getElementById('star-burst-container');
         for (let i = 0; i < 20; i++) {
             const star = document.createElement('div');
@@ -802,27 +805,74 @@
             ], { duration: 1000, easing: 'ease-out' }).onfinish = () => star.remove();
         }
 
-        setTimeout(() => {
-            alert('感謝您的支持！⭐✨\n\n您的鼓勵是我們最大的動力！');
-        }, 800);
+        // Check if already liked
+        if (localStorage.getItem(LIKE_STORAGE_KEY)) {
+            setTimeout(() => alert('您已經按過讚囉！感謝您的支持！⭐✨'), 800);
+            return;
+        }
+
+        // Increment cloud counter
+        try {
+            const res = await fetchWithTimeout(APP_LIKES_API, { timeout: 6000 });
+            if (res.ok) {
+                const data = await res.json();
+                const newCount = (data.stars || 0) + 1;
+                await fetchWithTimeout(APP_LIKES_API, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ stars: newCount }),
+                    timeout: 6000
+                });
+                localStorage.setItem(LIKE_STORAGE_KEY, 'true');
+                updateStarDisplay(null, newCount);
+                setTimeout(() => alert(`感謝您的支持！⭐✨\n\n您是第 ${newCount} 位按讚的人！\n您的鼓勵是我們最大的動力！`), 800);
+            }
+        } catch(e) {
+            console.error('Like counter error', e);
+            setTimeout(() => alert('感謝您的支持！⭐✨\n\n（按讚計數器暫時離線，但我們收到您的心意了！）'), 800);
+        }
+    }
+
+    function updateStarDisplay(githubStars, appLikes) {
+        const textEl = document.querySelector('.github-star-btn .star-text');
+        if (!textEl) return;
+        
+        let parts = [];
+        if (githubStars !== null && githubStars !== undefined) parts.push(`GitHub ⭐ ${githubStars}`);
+        if (appLikes !== null && appLikes !== undefined) parts.push(`👍 ${appLikes} 人按讚`);
+        
+        if (parts.length > 0) {
+            textEl.textContent = parts.join(' ｜ ');
+        }
     }
 
     async function fetchGithubStars() {
+        let ghStars = null;
+        let appLikes = null;
+
+        // Fetch GitHub stars
         try {
-            const res = await fetch('https://api.github.com/repos/CocoChang928/Reward_Chart');
-            if (!res.ok) {
-                const textEl = document.querySelector('.github-star-btn .star-text');
-                if (textEl) textEl.textContent = `（尚未上傳 GitHub）`;
-                return;
-            }
-            const data = await res.json();
-            if (data.stargazers_count !== undefined) {
-                const textEl = document.querySelector('.github-star-btn .star-text');
-                if (textEl) textEl.textContent = `被按星數：${data.stargazers_count}`;
+            const res = await fetchWithTimeout('https://api.github.com/repos/CocoChang928/Reward_Chart', { timeout: 5000 });
+            if (res.ok) {
+                const data = await res.json();
+                ghStars = data.stargazers_count ?? 0;
             }
         } catch (e) {
-            console.error('Fetch Github stars error', e);
+            console.error('GitHub API error', e);
         }
+
+        // Fetch App likes from JSONBlob
+        try {
+            const res = await fetchWithTimeout(APP_LIKES_API, { timeout: 5000 });
+            if (res.ok) {
+                const data = await res.json();
+                appLikes = data.stars ?? 0;
+            }
+        } catch (e) {
+            console.error('App likes fetch error', e);
+        }
+
+        updateStarDisplay(ghStars, appLikes);
     }
 
     // ===== Utils =====
