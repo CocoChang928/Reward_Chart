@@ -354,6 +354,9 @@
         const readonlyShareBtn = document.getElementById('readonly-share');
         if (readonlyShareBtn) readonlyShareBtn.addEventListener('click', openShareModal);
 
+        const readonlySyncBtn = document.getElementById('readonly-sync');
+        if (readonlySyncBtn) readonlySyncBtn.addEventListener('click', syncSharedData);
+
         // Share modal close (works in both modes)
         document.getElementById('share-close').addEventListener('click', () => closeModal('share-modal'));
 
@@ -419,6 +422,44 @@
                 showWelcomeScreen(true);
             }
         });
+    }
+
+    // ===== Sync Shared Data =====
+    function syncSharedData() {
+        let confirmMsg = '💾 確定要將這份分享資料同步到這台裝置嗎？\n\n';
+        confirmMsg += '📥 同步後的資料（分享來源）：\n';
+        state.children.forEach(c => {
+            const count = c.stamps.filter(s => s !== null).length;
+            confirmMsg += `  ・${c.name}：${count} / ${TOTAL_STAMPS} 個印章\n`;
+        });
+
+        // Check for existing local data
+        let hasLocal = false;
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (parsed.children && parsed.children.length > 0) {
+                    hasLocal = true;
+                    confirmMsg += '\n⚠️ 此裝置目前已有資料（將被覆蓋）：\n';
+                    parsed.children.forEach(c => {
+                        const count = c.stamps.filter(s => s !== null).length;
+                        confirmMsg += `  ・${c.name}：${count} / ${TOTAL_STAMPS} 個印章\n`;
+                    });
+                    confirmMsg += '\n同步後，以上裝置資料會被分享資料取代，確定嗎？';
+                } else {
+                    confirmMsg += '\n（此裝置目前無資料）\n\n確定同步？';
+                }
+            } else {
+                confirmMsg += '\n（此裝置目前無資料）\n\n確定同步？';
+            }
+        } catch(e) {}
+
+        if (!confirm(confirmMsg)) return;
+
+        // Save shared state to localStorage and reload without hash
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ children: state.children }));
+        window.location.href = window.location.origin + window.location.pathname;
     }
 
     // ===== Stamp Logic =====
