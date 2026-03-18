@@ -37,20 +37,21 @@
     </button>
     <div id="star-burst-container"></div>
 
-    <!-- Top Controls -->
-    <div class="top-controls" id="top-controls">
-        <!-- Desktop: pill buttons row -->
-        <div class="ctrl-pill-group" id="ctrl-pill-group">
-            <button id="setup-btn" class="control-btn setup-btn">⚙️ 設定</button>
-            <button id="toggle-view-btn" class="control-btn toggle-view-btn">📋 清單</button>
-            <button id="share-btn" class="control-btn share-btn">📱 分享</button>
-            <button id="export-pdf-btn" class="control-btn pdf-btn">📄 PDF</button>
-            <button id="reset-btn" class="control-btn reset-ctrl-btn">🔄 重設</button>
-        </div>
-        <!-- Mobile: hamburger -->
+    <!-- Mobile Fixed Header Bar (hidden on desktop) -->
+    <div class="mobile-header" id="mobile-header">
+        <span class="mobile-header-title">🏆 冒險蓋章挑戰</span>
         <button class="hamburger-btn" id="hamburger-btn" aria-label="選單">
             <span></span><span></span><span></span>
         </button>
+    </div>
+
+    <!-- Desktop Top Controls (hidden on mobile) -->
+    <div class="top-controls" id="top-controls">
+        <button id="setup-btn" class="control-btn setup-btn">⚙️ 設定</button>
+        <button id="toggle-view-btn" class="control-btn toggle-view-btn">📋 清單</button>
+        <button id="share-btn" class="control-btn share-btn">📱 分享</button>
+        <button id="export-pdf-btn" class="control-btn pdf-btn">📄 PDF</button>
+        <button id="reset-btn" class="control-btn reset-ctrl-btn">🔄 重設</button>
     </div>
 
     <!-- Mobile Dropdown Menu -->
@@ -63,8 +64,7 @@
     </div>
     <div class="mobile-menu-backdrop" id="mobile-menu-backdrop"></div>
 
-
-    <!-- Banner -->
+    <!-- Banner (hidden on mobile, visible on desktop) -->
     <header class="banner" id="banner">
         <div class="banner-ribbon">
             <h1>🏆 我們的冒險蓋章挑戰！🏆</h1>

@@ -85,6 +85,8 @@
     function setupReadOnlyUI() {
         document.getElementById('top-controls').style.display = 'none';
         document.getElementById('github-star-btn').style.display = 'none';
+        const mobileHeader = document.getElementById('mobile-header');
+        if (mobileHeader) mobileHeader.style.display = 'none';
         const banner = document.getElementById('readonly-banner');
         banner.style.display = 'flex';
         document.body.style.paddingTop = '48px';
