@@ -116,10 +116,14 @@
         </div>
     </div>
 
-    <!-- Read-Only Banner -->
+    <!-- Read-Only Header (shown in shared mode) -->
     <div class="readonly-banner" id="readonly-banner" style="display:none;">
-        👀 唯讀模式 — 只能查看，不能蓋章哦！
-        <button id="readonly-start-own" style="margin-left:12px; padding:4px 12px; border:none; border-radius:6px; background:#ff9800; color:white; cursor:pointer; font-size:0.8rem;">🚀 我也要建立自己的</button>
+        <span>👀 唯讀分享模式 — 只能查看，不能蓋章哦！</span>
+        <div class="readonly-actions">
+            <button id="readonly-export-pdf" class="readonly-btn">📄 匯出 PDF</button>
+            <button id="readonly-share" class="readonly-btn">📱 轉分享</button>
+            <button id="readonly-start-own" class="readonly-btn readonly-btn-highlight">🚀 建立自己的</button>
+        </div>
     </div>
 
     <!-- Stamp Modal -->

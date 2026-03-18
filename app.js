@@ -83,8 +83,9 @@
 
     function setupReadOnlyUI() {
         document.getElementById('top-controls').style.display = 'none';
-        document.getElementById('readonly-banner').style.display = 'block';
-        document.body.classList.add('readonly-mode');
+        const banner = document.getElementById('readonly-banner');
+        banner.style.display = 'flex';
+        document.body.style.paddingTop = '48px';
     }
 
     function setupParentUI() {
@@ -244,13 +245,18 @@
             });
         }
 
-        // Read-only: "start own" button
+        // Read-only buttons
         const startOwnBtn = document.getElementById('readonly-start-own');
         if (startOwnBtn) {
             startOwnBtn.addEventListener('click', () => {
                 window.location.href = window.location.origin + window.location.pathname;
             });
         }
+        const readonlyExportBtn = document.getElementById('readonly-export-pdf');
+        if (readonlyExportBtn) readonlyExportBtn.addEventListener('click', exportToPDF);
+        
+        const readonlyShareBtn = document.getElementById('readonly-share');
+        if (readonlyShareBtn) readonlyShareBtn.addEventListener('click', openShareModal);
 
         // Share copy button
         const copyBtn = document.getElementById('share-copy-btn');

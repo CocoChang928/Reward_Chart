@@ -1000,15 +1000,46 @@ body::after {
     top: 0; left: 0; right: 0;
     background: linear-gradient(135deg, #ff9800, #f57c00);
     color: white;
-    text-align: center;
-    padding: 10px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 8px 16px;
     font-weight: bold;
     z-index: 2000;
     box-shadow: 0 2px 10px rgba(0,0,0,0.25);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    flex-wrap: wrap;
 }
-body.readonly-mode {
-    padding-top: 44px;
+.readonly-banner[style*="block"] {
+    display: flex !important;
+}
+.readonly-actions {
+    display: flex;
+    gap: 6px;
+}
+.readonly-btn {
+    padding: 5px 12px;
+    border: 2px solid rgba(255,255,255,0.6);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    font-family: 'Noto Sans TC', sans-serif;
+}
+.readonly-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+.readonly-btn-highlight {
+    background: white;
+    color: #f57c00;
+    border-color: white;
+}
+.readonly-btn-highlight:hover {
+    background: #fff3e0;
 }
 
 /* Sync Overlay */
