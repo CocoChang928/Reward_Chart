@@ -40,6 +40,7 @@
     <!-- Top Controls (Hidden in Read-Only Mode) -->
     <div class="top-controls" id="top-controls">
         <button id="setup-btn" class="control-btn setup-btn">⚙️ 家長設定</button>
+        <button id="toggle-view-btn" class="control-btn" style="background:#7c4dff; color:white;">📋 清單模式</button>
         <button id="share-btn" class="control-btn share-btn">📱 分享 (唯讀)</button>
         <button id="export-pdf-btn" class="control-btn" style="background:#ffb300; color:white;">📄 匯出 PDF</button>
         <button id="reset-btn" class="control-btn" style="background:#ef5350; color:white;">🔄 重新開始</button>
@@ -120,6 +121,7 @@
     <div class="readonly-banner" id="readonly-banner" style="display:none;">
         <span>👀 唯讀分享模式 — 只能查看，不能蓋章哦！</span>
         <div class="readonly-actions">
+            <button id="readonly-toggle-view" class="readonly-btn">📋 清單模式</button>
             <button id="readonly-export-pdf" class="readonly-btn">📄 匯出 PDF</button>
             <button id="readonly-share" class="readonly-btn">📱 轉分享</button>
             <button id="readonly-start-own" class="readonly-btn readonly-btn-highlight">🚀 建立自己的</button>

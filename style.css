@@ -1268,3 +1268,79 @@ body::after {
     transform: scale(1.06);
     box-shadow: 0 6px 24px rgba(255,87,34,0.45);
 }
+
+/* ===== List View ===== */
+.list-view-panel {
+    background: rgba(255,255,255,0.9);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    flex: 1;
+    min-width: 0;
+}
+.list-view-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+.list-view-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffe082;
+}
+.list-view-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #5d4037;
+}
+.list-view-tagline {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    font-style: italic;
+    margin-left: 6px;
+}
+.list-view-progress {
+    font-size: 0.75rem;
+    color: #999;
+    margin-top: 2px;
+}
+.list-view-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+.list-view-table thead th {
+    text-align: left;
+    padding: 6px 10px;
+    background: #fff8e1;
+    color: #795548;
+    border-bottom: 2px solid #ffe0b2;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+.list-view-table tbody tr {
+    border-bottom: 1px solid #f5f5f5;
+    transition: background 0.15s;
+}
+.list-view-table tbody tr:hover {
+    background: #fffde7;
+}
+.list-view-table td {
+    padding: 6px 10px;
+}
+.list-stamp-num {
+    color: #ff8f00;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.list-stamp-time {
+    color: #888;
+    white-space: nowrap;
+    font-size: 0.8rem;
+}

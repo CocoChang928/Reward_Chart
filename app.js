@@ -46,6 +46,7 @@
     let state = { children: [] };
     let isReadOnlyMode = false;
     let pendingStampOperation = null;
+    let currentView = 'stamp'; // 'stamp' or 'list'
 
     // ===== Initialization =====
     function init() {
@@ -199,6 +200,73 @@
         });
     }
 
+    // ===== List View =====
+    function renderListView() {
+        const container = document.getElementById('main-content');
+        container.innerHTML = '';
+
+        if (state.children.length === 0) {
+            container.innerHTML = '<p style="text-align:center; width:100%; color:#666;">目前沒有資料。</p>';
+            return;
+        }
+
+        state.children.forEach(child => {
+            const panel = document.createElement('div');
+            panel.className = 'list-view-panel';
+            panel.style.borderLeft = `4px solid ${child.color}`;
+
+            const stampedList = child.stamps
+                .map((s, i) => s ? { index: i, ...s } : null)
+                .filter(Boolean);
+            const total = stampedList.length;
+
+            let tableHtml = '';
+            if (total === 0) {
+                tableHtml = '<p style="color:#999; font-style:italic; padding:8px 0;">尚未獲得任何印章 🎯</p>';
+            } else {
+                tableHtml = '<table class="list-view-table"><thead><tr><th>#</th><th>日期時間</th><th>蓋章原因</th></tr></thead><tbody>';
+                stampedList.forEach(s => {
+                    tableHtml += `<tr>
+                        <td class="list-stamp-num">⭐ ${s.index + 1}</td>
+                        <td class="list-stamp-time">${s.time || '—'}</td>
+                        <td>${s.reason || '—'}</td>
+                    </tr>`;
+                });
+                tableHtml += '</tbody></table>';
+            }
+
+            const tagline = (child.subtitle || child.name + '的冒險旅程').replace(child.name, '');
+            panel.innerHTML = `
+                <div class="list-view-header">
+                    <img src="${child.avatar}" class="list-view-avatar">
+                    <div>
+                        <span class="list-view-name">${child.name}</span>
+                        <span class="list-view-tagline">${tagline}</span>
+                        <div class="list-view-progress">進度 ${total} / ${TOTAL_STAMPS}</div>
+                    </div>
+                </div>
+                ${tableHtml}
+            `;
+            container.appendChild(panel);
+        });
+    }
+
+    function toggleView() {
+        currentView = (currentView === 'stamp') ? 'list' : 'stamp';
+        const label = currentView === 'stamp' ? '📋 清單模式' : '🏆 印章模式';
+
+        const parentBtn = document.getElementById('toggle-view-btn');
+        if (parentBtn) parentBtn.textContent = label;
+        const readonlyBtn = document.getElementById('readonly-toggle-view');
+        if (readonlyBtn) readonlyBtn.textContent = label;
+
+        if (currentView === 'list') {
+            renderListView();
+        } else {
+            renderAllCharts();
+        }
+    }
+
     // ===== Event Bindings =====
     function bindEvents() {
         document.getElementById('main-content').addEventListener('click', e => {
@@ -238,6 +306,7 @@
                     showWelcomeScreen(true);
                 }
             });
+            document.getElementById('toggle-view-btn').addEventListener('click', toggleView);
 
             // Welcome Start button
             document.getElementById('welcome-start-btn').addEventListener('click', () => {
@@ -255,6 +324,8 @@
         }
         const readonlyExportBtn = document.getElementById('readonly-export-pdf');
         if (readonlyExportBtn) readonlyExportBtn.addEventListener('click', exportToPDF);
+        const readonlyToggleBtn = document.getElementById('readonly-toggle-view');
+        if (readonlyToggleBtn) readonlyToggleBtn.addEventListener('click', toggleView);
         
         const readonlyShareBtn = document.getElementById('readonly-share');
         if (readonlyShareBtn) readonlyShareBtn.addEventListener('click', openShareModal);
