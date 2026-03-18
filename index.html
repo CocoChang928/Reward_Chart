@@ -44,6 +44,7 @@
         <button id="setup-btn" class="control-btn setup-btn">⚙️ 家長設定</button>
         <button id="share-btn" class="control-btn share-btn">📱 分享 (唯讀)</button>
         <button id="export-pdf-btn" class="control-btn" style="background:#ffb300; color:white;">📄 匯出 PDF</button>
+        <button id="reset-btn" class="control-btn" style="background:#ef5350; color:white;">🔄 重新開始</button>
     </div>
 
     <!-- Banner -->
@@ -53,6 +54,29 @@
             <p class="subtitle" id="main-subtitle">集滿 30 個印章，獲得超級大獎！</p>
         </div>
     </header>
+
+    <!-- Welcome Screen (First Time) -->
+    <div class="welcome-screen" id="welcome-screen" style="display:none;">
+        <div class="welcome-card">
+            <h2>🎉 歡迎來到冒險蓋章挑戰！</h2>
+            <p>專為小朋友設計的獎勵集章 App，讓好習慣變得超有趣！</p>
+            <div class="welcome-features">
+                <div class="welcome-feature">🏆 集滿 30 個印章解鎖大獎</div>
+                <div class="welcome-feature">👨‍👩‍👧‍👦 支援 1~3 位小朋友</div>
+                <div class="welcome-feature">🔒 家長臉部辨識把關蓋章</div>
+                <div class="welcome-feature">📱 分享到小朋友的平板觀看</div>
+            </div>
+            <h3 style="color:#5d4037; margin-top:20px; font-size:1.1rem;">📖 使用步驟</h3>
+            <ul class="welcome-steps">
+                <li><span class="step-num">1</span> 點擊「⚙️ 家長設定」新增小朋友的名字與大頭貼</li>
+                <li><span class="step-num">2</span> 註冊家長臉孔（最多兩位），確保只有爸媽能蓋章</li>
+                <li><span class="step-num">3</span> 小朋友表現好時，點擊空格輸入原因完成蓋章！</li>
+                <li><span class="step-num">4</span> 用「📱 分享」產生 QR Code，讓小朋友用平板追蹤進度</li>
+                <li><span class="step-num">5</span> 集滿 10、20、30 格時會觸發里程碑慶祝動畫！🎊</li>
+            </ul>
+            <button class="welcome-start-btn" id="welcome-start-btn">🚀 開始設定我的小朋友</button>
+        </div>
+    </div>
 
     <!-- Main content (Dynamically filled) -->
     <main class="charts-container" id="main-content">

@@ -89,11 +89,14 @@
 
     function setupParentUI() {
         if (state.children.length === 0) {
-            // Default demo data if first time
-            state.children.push(createChild('Coco', AVATAR_IMAGES[0], '#f48fb1'));
-            state.children.push(createChild('Barkley', AVATAR_IMAGES[1], '#81c784'));
-            saveLocalState();
+            // First time — show welcome screen
+            showWelcomeScreen(true);
         }
+    }
+
+    function showWelcomeScreen(show) {
+        document.getElementById('welcome-screen').style.display = show ? 'block' : 'none';
+        document.getElementById('main-content').style.display = show ? 'none' : '';
     }
 
     const ADVENTURE_TAGLINES = [
@@ -316,6 +319,22 @@
 
             const exportBtn = document.getElementById('export-pdf-btn');
             if (exportBtn) exportBtn.addEventListener('click', exportToPDF);
+
+            // Reset button
+            document.getElementById('reset-btn').addEventListener('click', () => {
+                if (confirm('⚠️ 確定要重新開始嗎？\n\n所有小朋友的資料、印章紀錄、家長臉部資料都會被清除！')) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    state = { children: [], shareId: null, parentFaceDescriptors: [] };
+                    renderAllCharts();
+                    showWelcomeScreen(true);
+                }
+            });
+
+            // Welcome Start button
+            document.getElementById('welcome-start-btn').addEventListener('click', () => {
+                showWelcomeScreen(false);
+                openSetupModal();
+            });
 
             // Face Auth
             document.getElementById('face-auth-cancel').addEventListener('click', cancelFaceAuth);
@@ -571,14 +590,21 @@
 
     // ===== Easter Egg & Setup =====
     function openSetupModal() {
-        promptFaceAuth('verify', () => {
+        const doOpen = () => {
             const list = document.getElementById('setup-children-list');
             list.innerHTML = '';
             state.children.forEach(child => {
                 list.appendChild(createSetupChildElement(child));
             });
             document.getElementById('setup-modal').classList.add('active');
-        });
+        };
+
+        // Skip face auth if no parent face registered yet (first-time user)
+        if (!state.parentFaceDescriptors || state.parentFaceDescriptors.length === 0) {
+            doOpen();
+        } else {
+            promptFaceAuth('verify', doOpen);
+        }
     }
 
     function createSetupChildElement(child = { id: 'new_'+Date.now(), name: '', color: '#ffeb3b', avatar: AVATAR_IMAGES[2], milestones: ['故事時間','小點心','超級大獎！'] }) {
@@ -664,9 +690,11 @@
             
             // Retain old stamps if child existed
             let existingChild = state.children.find(c => c.id === id);
+            const subtitle = existingChild?.subtitle || (name + ADVENTURE_TAGLINES[newChildren.length % ADVENTURE_TAGLINES.length]);
             newChildren.push({
                 id: id,
                 name: name,
+                subtitle: subtitle,
                 color: color,
                 avatar: avatar,
                 milestones: [m1, m2, m3],
@@ -674,9 +702,15 @@
             });
         });
 
+        if (newChildren.length === 0) {
+            alert('請至少新增一位小朋友！');
+            return;
+        }
+
         state.children = newChildren;
         saveLocalState();
         renderAllCharts();
+        showWelcomeScreen(false);
         closeModal('setup-modal');
     }
 
