@@ -147,7 +147,8 @@
             section.dataset.childId = child.id;
 
             section.querySelector('.child-name-display').textContent = child.name;
-            section.querySelector('.child-subtitle').textContent = child.subtitle || child.name + '的冒險旅程';
+            const tagline = (child.subtitle || child.name + '的冒險旅程').replace(child.name, '');
+            section.querySelector('.child-subtitle').textContent = tagline;
             section.querySelector('.child-avatar-display').src = child.avatar;
             
             const inner = section.querySelector('.panel-inner');
