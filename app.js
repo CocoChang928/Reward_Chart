@@ -180,14 +180,23 @@
                 if (stamp) {
                     cell.classList.add('stamped');
                     cell.innerHTML = `<span class="stamp-icon">⭐</span>`;
+                    cell.style.background = child.color;
+                    cell.style.borderColor = child.color;
+                    cell.style.color = 'white';
+                    cell.style.boxShadow = `0 3px 10px ${child.color}88`;
                     stampedCount++;
                 } else {
                     cell.innerHTML = `<span class="cell-number">${i + 1}</span>`;
+                    // Light tint version for empty cells
+                    cell.style.background = child.color + '22';
+                    cell.style.borderColor = child.color + '88';
+                    cell.style.color = child.color;
                 }
                 
                 // Milestone markers
                 if (MILESTONE_VALUES.includes(i + 1)) {
                     cell.classList.add('milestone-cell');
+                    if (!stamp) cell.style.borderStyle = 'dashed';
                 }
                 board.appendChild(cell);
             });
@@ -375,6 +384,13 @@
         
         // GitHub Star
         document.getElementById('github-star-btn').addEventListener('click', triggerGithubStar);
+
+        // ESC key closes any open modal
+        document.addEventListener('keydown', e => {
+            if (e.key !== 'Escape') return;
+            ['stamp-modal','stamp-detail-view','setup-modal','share-modal','celebration-overlay']
+                .forEach(id => document.getElementById(id)?.classList.remove('active'));
+        });
 
         // ===== Hamburger Menu =====
         const hamburgerBtn = document.getElementById('hamburger-btn');

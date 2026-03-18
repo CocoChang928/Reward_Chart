@@ -1062,7 +1062,13 @@ body::after {
 /* ===== Mobile Layout (phone + tablet/iPad) ===== */
 @media (max-width: 900px) {
     .ctrl-pill-group { display: none; }
-    .hamburger-btn { display: flex; }
+    .hamburger-btn {
+        display: flex;
+        position: fixed;
+        top: 14px;
+        right: 14px;
+        z-index: 600;
+    }
     .github-star-btn { display: none !important; }
 
     /* Banner compact */
