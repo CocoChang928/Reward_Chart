@@ -945,6 +945,52 @@ body::after {
         width: 120px;
         height: 120px;
     }
+
+    /* Modal mobile fixes */
+    .modal-content {
+        padding: 20px 16px;
+        max-height: 85vh;
+        overflow-y: auto;
+        width: 94%;
+    }
+    .modal-content h3 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+    .detail-row {
+        flex-direction: column;
+        gap: 4px;
+    }
+    .detail-label {
+        min-width: unset;
+    }
+    .detail-value {
+        font-size: 0.9rem;
+    }
+    .modal-buttons {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .modal-btn {
+        font-size: 0.85rem;
+        padding: 8px 14px;
+    }
+    .replay-icon-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.95rem;
+        align-self: flex-start;
+    }
+    .readonly-banner {
+        flex-direction: column;
+        gap: 6px;
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+    .readonly-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }
 
 /* ===== Print styles ===== */
