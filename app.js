@@ -11,6 +11,17 @@
     const STORAGE_KEY = 'rewardChart_v3';
     const MILESTONE_VALUES = [10, 20, 30];
 
+    const STAMP_IMAGES = [
+        'stamps/01_star.svg','stamps/02_heart.svg','stamps/03_rainbow.svg','stamps/04_flower.svg',
+        'stamps/05_cat.svg','stamps/06_dog.svg','stamps/07_bunny.svg','stamps/08_sun.svg',
+        'stamps/09_moon.svg','stamps/10_apple.svg','stamps/11_butterfly.svg','stamps/12_fish.svg',
+        'stamps/13_balloon.svg','stamps/14_cake.svg','stamps/15_rocket.svg','stamps/16_music.svg',
+        'stamps/17_crown.svg','stamps/18_lollipop.svg','stamps/19_ribbon.svg','stamps/20_turtle.svg',
+        'stamps/21_bee.svg','stamps/22_sparkle.svg','stamps/23_palette.svg','stamps/24_strawberry.svg',
+        'stamps/25_fox.svg','stamps/26_penguin.svg','stamps/27_diamond.svg','stamps/28_cloud.svg',
+        'stamps/29_lightning.svg','stamps/30_paw.svg'
+    ];
+
     const AVATAR_IMAGES = [
         'images/coco_bear.png',
         'images/barkley_dk.png',
@@ -181,10 +192,12 @@
                 
                 if (stamp) {
                     cell.classList.add('stamped');
-                    cell.innerHTML = `<span class="stamp-icon">⭐</span>`;
+                    const stampImg = document.createElement('img');
+                    stampImg.src = STAMP_IMAGES[stamp.stampIcon || 0];
+                    stampImg.className = 'stamp-img';
+                    cell.appendChild(stampImg);
                     cell.style.background = child.color;
                     cell.style.borderColor = child.color;
-                    cell.style.color = 'white';
                     cell.style.boxShadow = `0 3px 10px ${child.color}88`;
                     stampedCount++;
                 } else {
@@ -497,6 +510,8 @@
         }
     }
 
+    let selectedStampIcon = 0;
+
     function openStampModal(childId, index) {
         const child = state.children.find(c => c.id === childId);
         document.getElementById('stamp-modal-title').textContent = `${child.name} — 第 ${index + 1} 格蓋章`;
@@ -504,9 +519,30 @@
         const d = new Date();
         document.getElementById('stamp-time').value = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
         document.getElementById('stamp-reason').value = '';
-        
+
+        // Populate stamp picker
+        const grid = document.getElementById('stamp-picker-grid');
+        grid.innerHTML = '';
+        selectedStampIcon = Math.floor(Math.random() * STAMP_IMAGES.length);
+        STAMP_IMAGES.forEach((src, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'stamp-pick-item' + (i === selectedStampIcon ? ' selected' : '');
+            btn.type = 'button';
+            btn.innerHTML = `<img src="${src}" alt="stamp ${i+1}">`;
+            btn.addEventListener('click', () => {
+                grid.querySelectorAll('.stamp-pick-item').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedStampIcon = i;
+            });
+            grid.appendChild(btn);
+        });
+
         pendingStampOperation = { childId, index };
         document.getElementById('stamp-modal').classList.add('active');
+
+        // Scroll selected into view
+        const selBtn = grid.querySelector('.selected');
+        if (selBtn) selBtn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
 
     function handleStampConfirm() {
@@ -522,7 +558,8 @@
         
         child.stamps[index] = {
             time: document.getElementById('stamp-time').value,
-            reason: reasonInput
+            reason: reasonInput,
+            stampIcon: selectedStampIcon
         };
         
         saveLocalState();
