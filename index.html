@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🌟 我們的冒險蓋章挑戰！</title>
-    <meta name="description" content="獎勵蓋章遊戲 - 集滿30個印章獲得大獎！">
+    <meta name="description" content="獎勵蓋章闖關遊戲 - 10關冒險挑戰，集滿印章獲得大獎！">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -51,8 +51,13 @@
         <button id="toggle-view-btn" class="control-btn toggle-view-btn">📋 清單</button>
         <button id="share-btn" class="control-btn share-btn">📱 分享</button>
         <button id="export-pdf-btn" class="control-btn pdf-btn">📄 PDF</button>
+        <button id="export-json-btn" class="control-btn json-btn">💾 匯出</button>
+        <button id="import-json-btn" class="control-btn json-btn">📂 匯入</button>
         <button id="reset-btn" class="control-btn reset-ctrl-btn">🔄 重設</button>
     </div>
+
+    <!-- Hidden file input for JSON import -->
+    <input type="file" id="import-file-input" accept=".json" style="display:none;">
 
     <!-- Mobile Dropdown Menu -->
     <div class="mobile-menu" id="mobile-menu">
@@ -60,6 +65,8 @@
         <button id="m-toggle-btn" class="mobile-menu-item">📋 清單模式</button>
         <button id="m-share-btn" class="mobile-menu-item">📱 分享（唯讀）</button>
         <button id="m-pdf-btn" class="mobile-menu-item">📄 匯出 PDF</button>
+        <button id="m-export-json-btn" class="mobile-menu-item">💾 匯出 JSON 備份</button>
+        <button id="m-import-json-btn" class="mobile-menu-item">📂 匯入 JSON 備份</button>
         <button id="m-reset-btn" class="mobile-menu-item danger">🔄 重新開始</button>
     </div>
     <div class="mobile-menu-backdrop" id="mobile-menu-backdrop"></div>
@@ -68,7 +75,7 @@
     <header class="banner" id="banner">
         <div class="banner-ribbon">
             <h1>🏆 我們的冒險蓋章挑戰！🏆</h1>
-            <p class="subtitle" id="main-subtitle">集滿 30 個印章，獲得超級大獎！</p>
+            <p class="subtitle" id="main-subtitle">10 關闖關冒險，每關集滿 30 個印章晉級！</p>
         </div>
     </header>
 
@@ -78,17 +85,17 @@
             <h2>🎉 歡迎來到冒險蓋章挑戰！</h2>
             <p>專為小朋友設計的獎勵集章 App，讓好習慣變得超有趣！</p>
             <div class="welcome-features">
-                <div class="welcome-feature">🏆 集滿 30 個印章解鎖大獎</div>
+                <div class="welcome-feature">🏰 10 關闖關冒險挑戰</div>
+                <div class="welcome-feature">🎨 每 10 個印章解鎖新大頭貼 + 新印章</div>
                 <div class="welcome-feature">👨‍👩‍👧‍👦 支援 1~3 位小朋友</div>
-                <div class="welcome-feature">📱 分享連結給小朋友觀看</div>
-                <div class="welcome-feature">📄 匯出 PDF 列印紀錄</div>
+                <div class="welcome-feature">💾 匯出 / 匯入 JSON 備份資料</div>
             </div>
             <h3 style="color:#5d4037; margin-top:20px; font-size:1.1rem;">📖 使用步驟</h3>
             <ul class="welcome-steps">
                 <li><span class="step-num">1</span> 點擊「⚙️ 家長設定」新增小朋友的名字與大頭貼</li>
                 <li><span class="step-num">2</span> 小朋友表現好時，點擊空格輸入原因完成蓋章！</li>
-                <li><span class="step-num">3</span> 用「📱 分享」產生連結，讓小朋友用平板查看進度</li>
-                <li><span class="step-num">4</span> 集滿 10、20、30 格時會觸發里程碑慶祝動畫！🎊</li>
+                <li><span class="step-num">3</span> 每 10 個印章解鎖新大頭貼和印章圖案 🎨</li>
+                <li><span class="step-num">4</span> 集滿 30 個印章闖關成功，挑戰下一關！🏰</li>
             </ul>
             <button class="welcome-start-btn" id="welcome-start-btn">🚀 開始設定我的小朋友</button>
         </div>
@@ -122,8 +129,7 @@
                 小朋友就能在平板上查看最新進度！<br>
                 <small style="color:#999;">（資料直接包含在連結中，不需要網路同步）</small>
             </p>
-            <div id="qrcode-wrapper" style="background: white; padding: 16px; display: inline-block; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-            </div>
+            <div id="qrcode-wrapper" style="background: white; padding: 16px; display: inline-block; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
             <div style="margin-top: 20px;">
                 <label style="display:block; font-size:0.8rem; margin-bottom:4px; color:#666;">分享網址：</label>
                 <input type="text" id="share-link-input" readonly class="modal-input" style="font-size:0.7rem; text-align:center; padding: 8px;" onclick="this.select()">
@@ -210,6 +216,11 @@
     <template id="child-panel-template">
         <section class="chart-panel" data-child-id="">
             <div class="panel-inner">
+                <!-- Level Info -->
+                <div class="level-info">
+                    <span class="level-number">🏰 第 1 關</span>
+                    <span class="level-theme">🌿 森林冒險</span>
+                </div>
                 <div class="character-header">
                     <div class="name-banner">
                         <span class="child-name-display" style="font-size:1.4rem; font-weight:700;">Name</span>
@@ -218,15 +229,23 @@
                     <div class="character-image-wrapper">
                         <img src="" alt="Character" class="character-image child-avatar-display">
                         <div class="character-glow"></div>
+                        <div class="avatar-new-badge" style="display:none;">❗</div>
                     </div>
                 </div>
                 <div class="stamp-board"></div>
+                <!-- Level Navigation -->
+                <div class="level-nav">
+                    <button class="level-nav-btn level-prev" data-child-id="">◀ 上一關</button>
+                    <span class="level-nav-display">第 1 關</span>
+                    <button class="level-nav-btn level-next" data-child-id="">下一關 ▶</button>
+                </div>
                 <div class="progress-section">
                     <div class="progress-bar-container">
                         <div class="progress-bar child-progress" style="width:0%"></div>
                     </div>
                     <span class="progress-text child-count">0 / 30</span>
                 </div>
+                <div class="total-stamps-display" style="text-align:center;font-size:0.85rem;color:#888;margin-bottom:8px;">累計總印章：0</div>
                 <div class="milestone-rewards child-milestones">
                     <div class="milestone m10" data-milestone="10">
                         <span class="milestone-icon">🎁</span>
