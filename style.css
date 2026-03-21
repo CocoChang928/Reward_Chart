@@ -1614,6 +1614,18 @@ body::after {
     border-color: #ffb300;
     transform: scale(1.05);
 }
+.level-nav-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    transform: none;
+    background: rgba(0,0,0,0.05);
+    border-color: rgba(0,0,0,0.08);
+}
+.level-nav-btn:disabled:hover {
+    transform: none;
+    background: rgba(0,0,0,0.05);
+    border-color: rgba(0,0,0,0.08);
+}
 .level-nav-display {
     font-size: 0.9rem;
     font-weight: 700;

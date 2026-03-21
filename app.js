@@ -320,6 +320,12 @@
             prevBtn.dataset.childId = child.id;
             nextBtn.dataset.childId = child.id;
 
+            // Disable buttons when not navigable
+            const canGoPrev = child.currentLevel > 1;
+            const canGoNext = child.levels[child.currentLevel + 1] || stampedCount >= STAMPS_PER_LEVEL;
+            prevBtn.disabled = !canGoPrev;
+            nextBtn.disabled = !canGoNext;
+
             // Progress
             const pct = (stampedCount / STAMPS_PER_LEVEL) * 100;
             section.querySelector('.child-progress').style.width = pct + '%';
