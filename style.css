@@ -1470,6 +1470,9 @@ body::after {
 .list-view-table td {
     padding: 6px 10px;
 }
+.list-view-table td:first-child {
+    white-space: nowrap;
+}
 .list-stamp-num {
     color: #ff8f00;
     font-weight: 700;

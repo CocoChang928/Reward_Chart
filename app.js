@@ -786,7 +786,7 @@
             if (!allStamps.length) { listHtml = '<p style="color:#999;font-style:italic;">尚未獲得任何印章</p>'; }
             else {
                 listHtml = '<table style="width:100%;border-collapse:collapse;font-size:0.9rem;"><tr style="background:#fff3e0;"><th style="padding:6px 10px;text-align:left;border-bottom:2px solid #ffe0b2;">關卡</th><th style="padding:6px 10px;text-align:left;border-bottom:2px solid #ffe0b2;">#</th><th style="padding:6px 10px;text-align:left;border-bottom:2px solid #ffe0b2;">日期時間</th><th style="padding:6px 10px;text-align:left;border-bottom:2px solid #ffe0b2;">蓋章原因</th></tr>';
-                allStamps.forEach(s => { listHtml += `<tr style="border-bottom:1px solid #f5f5f5;"><td style="padding:5px 10px;color:#666;">第${s.level}關</td><td style="padding:5px 10px;color:#ff8f00;font-weight:bold;">⭐ 第${s.index+1}格</td><td style="padding:5px 10px;color:#666;">${s.time||'未記錄'}</td><td style="padding:5px 10px;">${s.reason||'未記錄原因'}</td></tr>`; });
+                allStamps.forEach(s => { listHtml += `<tr style="border-bottom:1px solid #f5f5f5;"><td style="padding:5px 10px;color:#666;white-space:nowrap;">第${s.level}關</td><td style="padding:5px 10px;color:#ff8f00;font-weight:bold;white-space:nowrap;">⭐ 第${s.index+1}格</td><td style="padding:5px 10px;color:#666;white-space:nowrap;">${s.time||'未記錄'}</td><td style="padding:5px 10px;">${s.reason||'未記錄原因'}</td></tr>`; });
                 listHtml += '</table>';
             }
             const sec = document.createElement('div');
