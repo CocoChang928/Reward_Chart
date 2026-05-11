@@ -125,65 +125,85 @@
         'stamps/01_star.svg'
     ];
 
-    // ===== All avatar images (36 total, unlocked progressively) =====
+    // ===== All avatar images (56 total, unlocked progressively) =====
     const ALL_AVATARS = [
-        'images/coco_bear.png','images/barkley_dk.png',
-        'images/bear_forest_reward_1773823932111.png','images/gorilla_gaming_reward_1773823949440.png',
-        'images/rabbit_icecream_reward_1773823966250.png','images/cat_piano_1773824059476.png',
-        'images/dog_balloon_1773824077053.png','images/panda_book_1773824096391.png',
-        'images/turtle_spaceship_1773824432588.png','images/fox_campfire_1773824448395.png',
-        'images/koala_sleeping_1773824465460.png','images/penguin_ic_1773824638469.png',
-        'images/lion_k_1773824654576.png','images/owl_r_1773824673758.png',
+        'images/bear_skating_1778497027589.png',
+        'images/cat_skating_1778497040951.png',
+        'images/dog_skating_1778497055037.png',
+        'images/elephant_skating_scene_1778497209597.png',
+        'images/fox_skating_1778497069198.png',
+        'images/giraffe_skating_scene_1778497294351.png',
+        'images/hippo_skating_scene_1778497321494.png',
+        'images/kangaroo_skating_scene_1778497332846.png',
+        'images/koala_skating_scene_1778497266392.png',
+        'images/lion_skating_scene_1778497183876.png',
+        'images/monkey_skating_scene_1778497226155.png',
+        'images/owl_skating_scene_1778497345850.png',
+        'images/panda_skating_scene_1778497253363.png',
+        'images/penguin_skating_1778497082730.png',
+        'images/rabbit_skating_scene_1778497240741.png',
+        'images/raccoon_skating_scene_1778497360261.png',
+        'images/rhino_skating_scene_1778497308480.png',
+        'images/sloth_skating_scene_1778497374075.png',
+        'images/tiger_skating_scene_1778497196231.png',
+        'images/zebra_skating_scene_1778497279845.png',
+        'images/coco_bear.png', 'images/barkley_dk.png',
+        'images/bear_forest_reward_1773823932111.png', 'images/gorilla_gaming_reward_1773823949440.png',
+        'images/rabbit_icecream_reward_1773823966250.png', 'images/cat_piano_1773824059476.png',
+        'images/dog_balloon_1773824077053.png', 'images/panda_book_1773824096391.png',
+        'images/turtle_spaceship_1773824432588.png', 'images/fox_campfire_1773824448395.png',
+        'images/koala_sleeping_1773824465460.png', 'images/penguin_ic_1773824638469.png',
+        'images/lion_k_1773824654576.png', 'images/owl_r_1773824673758.png',
         'images/dolphin_t_1773824690102.png',
-        'images/gorilla_knight.png','images/bear_dancer.png','images/dragon_cool.png',
-        'images/gorilla_pirate.png','images/bear_princess.png','images/ninja_cat.png',
-        'images/gorilla_samurai.png','images/bear_fairy.png','images/space_bunny.png',
-        'images/gorilla_space.png','images/bear_mermaid.png','images/robot_friend.png',
-        'images/gorilla_dragon.png','images/bear_unicorn.png','images/wizard_fox.png',
-        'images/gorilla_mecha.png','images/bear_queen.png','images/pirate_penguin.png',
-        'images/gorilla_king.png','images/bear_rainbow.png','images/bear_goddess.png'
+        'images/gorilla_knight.png', 'images/bear_dancer.png', 'images/dragon_cool.png',
+        'images/gorilla_pirate.png', 'images/bear_princess.png', 'images/ninja_cat.png',
+        'images/gorilla_samurai.png', 'images/bear_fairy.png', 'images/space_bunny.png',
+        'images/gorilla_space.png', 'images/bear_mermaid.png', 'images/robot_friend.png',
+        'images/gorilla_dragon.png', 'images/bear_unicorn.png', 'images/wizard_fox.png',
+        'images/gorilla_mecha.png', 'images/bear_queen.png', 'images/pirate_penguin.png',
+        'images/gorilla_king.png', 'images/bear_rainbow.png', 'images/bear_goddess.png'
     ];
 
     // Unlock tiers: index = tier number (0-based), value = { avatars: [...indices], stamps: [...indices] }
     // Tier 0 = base (start), tier 1 = after 10 stamps total, tier 2 = after 20, etc.
     const UNLOCK_TIERS = [
-        { avatars: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14], stamps: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,109,108,107,106,105,104,103,102,101,100,99,98,97,96,95,94,93,92,91,90,89,88,87,86,85,84,83,82,81,80] },
-        { avatars: [15,16], stamps: [79,78] },
-        { avatars: [17], stamps: [77,76] },
-        { avatars: [18,19], stamps: [75] },
-        { avatars: [20], stamps: [74,73] },
-        { avatars: [21,22], stamps: [72] },
-        { avatars: [23], stamps: [71,70] },
-        { avatars: [24,25], stamps: [69] },
-        { avatars: [26], stamps: [68,67] },
-        { avatars: [27,28], stamps: [66] },
-        { avatars: [29], stamps: [65,64] },
-        { avatars: [30,31], stamps: [63] },
-        { avatars: [32], stamps: [62,61] },
+        { avatars: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], stamps: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80] },
+        { avatars: [15, 16], stamps: [79, 78] },
+        { avatars: [17], stamps: [77, 76] },
+        { avatars: [18, 19], stamps: [75] },
+        { avatars: [20], stamps: [74, 73] },
+        { avatars: [21, 22], stamps: [72] },
+        { avatars: [23], stamps: [71, 70] },
+        { avatars: [24, 25], stamps: [69] },
+        { avatars: [26], stamps: [68, 67] },
+        { avatars: [27, 28], stamps: [66] },
+        { avatars: [29], stamps: [65, 64] },
+        { avatars: [30, 31], stamps: [63] },
+        { avatars: [32], stamps: [62, 61] },
         { avatars: [33], stamps: [60] },
-        { avatars: [34], stamps: [59,58] },
-        { avatars: [35], stamps: [57,56,55,54,53,52,51,50] }
+        { avatars: [34], stamps: [59, 58] },
+        { avatars: [35], stamps: [57, 56, 55, 54, 53, 52, 51, 50] }
     ];
 
     const PRAISE_PHRASES = [
-        '做得很棒喔！','你好棒！','太厲害了！繼續加油！','哇，真的很棒耶！',
-        '好優秀喔！','你是最棒的！','再接再厲！你可以的！','表現得非常好！'
+        '做得很棒喔！', '你好棒！', '太厲害了！繼續加油！', '哇，真的很棒耶！',
+        '好優秀喔！', '你是最棒的！', '再接再厲！你可以的！', '表現得非常好！'
     ];
     const ADVENTURE_TAGLINES = [
-        '的冒險旅程','的奇幻挑戰','的星球探險','的寶藏獵人','的英雄任務','的魔法世界',
-        '的勇氣之路','的夢國探索','的奇蹟之旅','的太空任務','的叢林冒險','的海底尋寶'
+        '的冒險旅程', '的奇幻挑戰', '的星球探險', '的寶藏獵人', '的英雄任務', '的魔法世界',
+        '的勇氣之路', '的夢國探索', '的奇蹟之旅', '的太空任務', '的叢林冒險', '的海底尋寶'
     ];
     const LEVEL_THEMES = [
-        {name:'🌿 森林冒險',bg:'linear-gradient(135deg,#e8f5e9,#c8e6c9)'},
-        {name:'🌊 海洋探險',bg:'linear-gradient(135deg,#e3f2fd,#bbdefb)'},
-        {name:'🏔️ 高山挑戰',bg:'linear-gradient(135deg,#efebe9,#d7ccc8)'},
-        {name:'🌋 火山任務',bg:'linear-gradient(135deg,#fbe9e7,#ffccbc)'},
-        {name:'❄️ 冰雪世界',bg:'linear-gradient(135deg,#e1f5fe,#b3e5fc)'},
-        {name:'🏜️ 沙漠尋寶',bg:'linear-gradient(135deg,#fff8e1,#ffecb3)'},
-        {name:'🌙 月球基地',bg:'linear-gradient(135deg,#ede7f6,#d1c4e9)'},
-        {name:'🌸 櫻花秘境',bg:'linear-gradient(135deg,#fce4ec,#f8bbd0)'},
-        {name:'⚡ 雷霆要塞',bg:'linear-gradient(135deg,#e0f7fa,#b2ebf2)'},
-        {name:'👑 傳說殿堂',bg:'linear-gradient(135deg,#fff9c4,#ffe082)'}
+        { name: '🌿 森林冒險', bg: 'linear-gradient(135deg,#e8f5e9,#c8e6c9)' },
+        { name: '🌊 海洋探險', bg: 'linear-gradient(135deg,#e3f2fd,#bbdefb)' },
+        { name: '🏔️ 高山挑戰', bg: 'linear-gradient(135deg,#efebe9,#d7ccc8)' },
+        { name: '🌋 火山任務', bg: 'linear-gradient(135deg,#fbe9e7,#ffccbc)' },
+        { name: '❄️ 冰雪世界', bg: 'linear-gradient(135deg,#e1f5fe,#b3e5fc)' },
+        { name: '🏜️ 沙漠尋寶', bg: 'linear-gradient(135deg,#fff8e1,#ffecb3)' },
+        { name: '🌙 月球基地', bg: 'linear-gradient(135deg,#ede7f6,#d1c4e9)' },
+        { name: '🌸 櫻花秘境', bg: 'linear-gradient(135deg,#fce4ec,#f8bbd0)' },
+        { name: '⚡ 雷霆要塞', bg: 'linear-gradient(135deg,#e0f7fa,#b2ebf2)' },
+        { name: '👑 傳說殿堂', bg: 'linear-gradient(135deg,#fff9c4,#ffe082)' }
     ];
     let taglineIndex = 0;
 
@@ -212,10 +232,12 @@
         return Math.min(Math.floor(getTotalStamps(child) / 10), UNLOCK_TIERS.length - 1);
     }
     function getUnlockedAvatars(child) {
-        const tier = getUnlockTier(child);
-        const set = new Set();
-        for (let i = 0; i <= tier; i++) UNLOCK_TIERS[i].avatars.forEach(a => set.add(a));
-        return [...set];
+        const tier = Math.floor(getTotalStamps(child) / 5);
+        // Base 20 avatars + 1 more avatar every 5 stamps
+        const count = Math.min(ALL_AVATARS.length, 20 + tier);
+        const unlocked = [];
+        for (let i = 0; i < count; i++) unlocked.push(i);
+        return unlocked;
     }
     function getUnlockedStamps(child) {
         const tier = getUnlockTier(child);
@@ -225,7 +247,7 @@
     }
     function hasNewAvatars(child) {
         const unlocked = getUnlockedAvatars(child);
-        return unlocked.length > (child.seenAvatarCount || 15);
+        return unlocked.length > (child.seenAvatarCount || 20);
     }
     function hasNewStamps(child) {
         const unlocked = getUnlockedStamps(child);
@@ -258,7 +280,7 @@
         document.getElementById('readonly-banner').style.display = 'flex';
         document.body.style.paddingTop = '48px';
         const btn = document.getElementById('readonly-start-own');
-        if (btn) { try { const s = localStorage.getItem(STORAGE_KEY); if (s) { const p = JSON.parse(s); if (p.children?.length) btn.textContent = '🏠 回到我的蓋章'; } } catch(e){} }
+        if (btn) { try { const s = localStorage.getItem(STORAGE_KEY); if (s) { const p = JSON.parse(s); if (p.children?.length) btn.textContent = '🏠 回到我的蓋章'; } } catch (e) { } }
     }
     function setupParentUI() { if (!state.children.length) showWelcomeScreen(true); }
     function showWelcomeScreen(show) {
@@ -270,25 +292,25 @@
     function createChild(name, avatar, color) {
         const subtitle = name + ADVENTURE_TAGLINES[taglineIndex++ % ADVENTURE_TAGLINES.length];
         return {
-            id: 'child_' + Date.now() + Math.random().toString().slice(2,6),
+            id: 'child_' + Date.now() + Math.random().toString().slice(2, 6),
             name, subtitle, avatar, color,
             currentLevel: 1,
-            seenAvatarCount: 15,
+            seenAvatarCount: 20,
             seenStampCount: 30,
-            levels: { 1: { stamps: new Array(STAMPS_PER_LEVEL).fill(null), milestones: ['故事時間','小點心','超級大獎！'] } }
+            levels: { 1: { stamps: new Array(STAMPS_PER_LEVEL).fill(null), milestones: ['故事時間', '小點心', '超級大獎！'] } }
         };
     }
     function migrateChild(child) {
         if (child.stamps && !child.levels) {
             child.currentLevel = 1;
-            child.seenAvatarCount = child.seenAvatarCount || 15;
+            child.seenAvatarCount = child.seenAvatarCount || 20;
             child.seenStampCount = child.seenStampCount || 30;
-            child.levels = { 1: { stamps: child.stamps, milestones: child.milestones || ['故事時間','小點心','超級大獎！'] } };
+            child.levels = { 1: { stamps: child.stamps, milestones: child.milestones || ['故事時間', '小點心', '超級大獎！'] } };
             delete child.stamps; delete child.milestones;
         }
         if (!child.currentLevel) child.currentLevel = 1;
-        if (!child.levels) child.levels = { 1: { stamps: new Array(STAMPS_PER_LEVEL).fill(null), milestones: ['故事時間','小點心','超級大獎！'] } };
-        if (!child.seenAvatarCount) child.seenAvatarCount = 15;
+        if (!child.levels) child.levels = { 1: { stamps: new Array(STAMPS_PER_LEVEL).fill(null), milestones: ['故事時間', '小點心', '超級大獎！'] } };
+        if (!child.seenAvatarCount) child.seenAvatarCount = 20;
         if (!child.seenStampCount) child.seenStampCount = 30;
         return child;
     }
@@ -305,7 +327,7 @@
         const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = 'reward_chart_backup_' + new Date().toISOString().slice(0,10) + '.json';
+        a.download = 'reward_chart_backup_' + new Date().toISOString().slice(0, 10) + '.json';
         a.click(); URL.revokeObjectURL(a.href);
     }
     function importJSON() {
@@ -316,7 +338,7 @@
     function handleImportFile(e) {
         const file = e.target.files[0]; if (!file) return;
         const reader = new FileReader();
-        reader.onload = function(ev) {
+        reader.onload = function (ev) {
             try {
                 const data = JSON.parse(ev.target.result);
                 if (!data.children || !Array.isArray(data.children)) { alert('⚠️ 檔案格式不正確！'); return; }
@@ -431,7 +453,7 @@
             if (totalEl) totalEl.textContent = `累計總印章：${getTotalStamps(child)}`;
 
             // Milestones
-            const milestones = levelData?.milestones || ['里程碑1','里程碑2','終極大獎'];
+            const milestones = levelData?.milestones || ['里程碑1', '里程碑2', '終極大獎'];
             const ms = section.querySelector('.child-milestones');
             ms.querySelector('.m10-label').textContent = milestones[0];
             ms.querySelector('.m20-label').textContent = milestones[1];
@@ -464,11 +486,11 @@
             } else {
                 tableHtml = '<table class="list-view-table"><thead><tr><th>關卡</th><th>#</th><th>日期時間</th><th>蓋章原因</th></tr></thead><tbody>';
                 allStamps.forEach(s => {
-                    tableHtml += `<tr><td>第${s.level}關</td><td class="list-stamp-num">⭐ ${s.index+1}</td><td class="list-stamp-time">${s.time||'—'}</td><td>${s.reason||'—'}</td></tr>`;
+                    tableHtml += `<tr><td>第${s.level}關</td><td class="list-stamp-num">⭐ ${s.index + 1}</td><td class="list-stamp-time">${s.time || '—'}</td><td>${s.reason || '—'}</td></tr>`;
                 });
                 tableHtml += '</tbody></table>';
             }
-            const tagline = (child.subtitle || child.name+'的冒險旅程').replace(child.name,'');
+            const tagline = (child.subtitle || child.name + '的冒險旅程').replace(child.name, '');
             panel.innerHTML = `<div class="list-view-header"><img src="${child.avatar}" class="list-view-avatar"><div><span class="list-view-name">${child.name}</span><span class="list-view-tagline">${tagline}</span><div class="list-view-progress">🏰 第 ${child.currentLevel} 關 — 累計 ${getTotalStamps(child)} 個印章</div></div></div>${tableHtml}`;
             container.appendChild(panel);
         });
@@ -507,7 +529,7 @@
                     if (child.currentLevel < maxReached || child.currentLevel <= MAX_LEVEL) {
                         if (child.levels[child.currentLevel + 1] || getCurrentLevelStamps(child) >= STAMPS_PER_LEVEL) {
                             child.currentLevel++;
-                            if (!child.levels[child.currentLevel]) child.levels[child.currentLevel] = { stamps: new Array(STAMPS_PER_LEVEL).fill(null), milestones: ['故事時間','小點心','超級大獎！'] };
+                            if (!child.levels[child.currentLevel]) child.levels[child.currentLevel] = { stamps: new Array(STAMPS_PER_LEVEL).fill(null), milestones: ['故事時間', '小點心', '超級大獎！'] };
                             saveLocalState(); renderAllCharts();
                         }
                     }
@@ -572,7 +594,7 @@
         document.getElementById('github-star-btn').addEventListener('click', triggerGithubStar);
         document.addEventListener('keydown', e => {
             if (e.key !== 'Escape') return;
-            ['stamp-modal','stamp-detail-view','setup-modal','share-modal','celebration-overlay'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+            ['stamp-modal', 'stamp-detail-view', 'setup-modal', 'share-modal', 'celebration-overlay'].forEach(id => document.getElementById(id)?.classList.remove('active'));
         });
 
         // Hamburger menu
@@ -616,9 +638,9 @@
     let selectedStampIcon = 0;
     function openStampModal(childId, index) {
         const child = state.children.find(c => c.id === childId);
-        document.getElementById('stamp-modal-title').textContent = `${child.name} — 第${child.currentLevel}關 第${index+1}格`;
+        document.getElementById('stamp-modal-title').textContent = `${child.name} — 第${child.currentLevel}關 第${index + 1}格`;
         const d = new Date();
-        document.getElementById('stamp-time').value = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+        document.getElementById('stamp-time').value = `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
         document.getElementById('stamp-reason').value = '';
 
         const grid = document.getElementById('stamp-picker-grid');
@@ -629,7 +651,7 @@
             const btn = document.createElement('button');
             btn.className = 'stamp-pick-item' + (idx === selectedStampIcon ? ' selected' : '');
             btn.type = 'button';
-            btn.innerHTML = `<img src="${ALL_STAMPS[idx]}" alt="stamp ${idx+1}">`;
+            btn.innerHTML = `<img src="${ALL_STAMPS[idx]}" alt="stamp ${idx + 1}">`;
             btn.addEventListener('click', () => {
                 grid.querySelectorAll('.stamp-pick-item').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
@@ -676,9 +698,9 @@
                 } else {
                     const nextLevel = child.currentLevel + 1;
                     child.currentLevel = nextLevel;
-                    if (!child.levels[nextLevel]) child.levels[nextLevel] = { stamps: new Array(STAMPS_PER_LEVEL).fill(null), milestones: ['故事時間','小點心','超級大獎！'] };
+                    if (!child.levels[nextLevel]) child.levels[nextLevel] = { stamps: new Array(STAMPS_PER_LEVEL).fill(null), milestones: ['故事時間', '小點心', '超級大獎！'] };
                     saveLocalState();
-                    showCelebration(`🎊 闖關成功！${child.name} 進入第 ${nextLevel} 關「${LEVEL_THEMES[(nextLevel-1)%LEVEL_THEMES.length].name}」！繼續加油！🎊`);
+                    showCelebration(`🎊 闖關成功！${child.name} 進入第 ${nextLevel} 關「${LEVEL_THEMES[(nextLevel - 1) % LEVEL_THEMES.length].name}」！繼續加油！🎊`);
                     setTimeout(() => renderAllCharts(), 300);
                 }
             }, 800);
@@ -692,7 +714,7 @@
 
     function openDetailView(child, index) {
         const stamp = child.levels[child.currentLevel].stamps[index];
-        document.getElementById('detail-title').textContent = `${child.name} — 第${child.currentLevel}關 第${index+1}格`;
+        document.getElementById('detail-title').textContent = `${child.name} — 第${child.currentLevel}關 第${index + 1}格`;
         document.getElementById('detail-time').textContent = stamp.time || '未記錄';
         document.getElementById('detail-reason').textContent = stamp.reason || '未記錄原因';
         if (isReadOnlyMode) {
@@ -723,7 +745,7 @@
     }
 
     function createSetupChildElement(child) {
-        if (!child) child = { id: 'new_'+Date.now(), name: '', color: '#ffeb3b', avatar: ALL_AVATARS[2], currentLevel: 1, seenAvatarCount: 15, seenStampCount: 30, levels: {} };
+        if (!child) child = { id: 'new_' + Date.now(), name: '', color: '#ffeb3b', avatar: ALL_AVATARS[20], currentLevel: 1, seenAvatarCount: 20, seenStampCount: 30, levels: {} };
         const div = document.createElement('div');
         div.className = 'setup-child-item';
         div.style.cssText = 'border:1px solid #ddd;padding:10px;margin-bottom:10px;border-radius:8px;';
@@ -737,7 +759,7 @@
         const unlockedAvatarIds = getUnlockedAvatars(child);
         let avatarOptions = unlockedAvatarIds.map(idx => {
             const src = ALL_AVATARS[idx];
-            const isNew = idx >= 15 && (child.seenAvatarCount || 15) <= idx;
+            const isNew = idx >= 20 && (child.seenAvatarCount || 20) <= idx;
             return `<div class="avatar-opt-wrap"><img src="${src}" class="avatar-carousel-item setup-avatar-opt ${src === child.avatar ? 'selected' : ''}" data-src="${src}">${isNew ? '<span class="avatar-new-tag">NEW!</span>' : ''}</div>`;
         }).join('');
 
@@ -797,8 +819,8 @@
             const existing = state.children.find(c => c.id === id);
             const subtitle = existing?.subtitle || (name + ADVENTURE_TAGLINES[newChildren.length % ADVENTURE_TAGLINES.length]);
             const currentLevel = existing?.currentLevel || 1;
-            const levels = existing?.levels || { 1: { stamps: new Array(STAMPS_PER_LEVEL).fill(null), milestones: [m1,m2,m3] } };
-            if (levels[currentLevel]) levels[currentLevel].milestones = [m1,m2,m3];
+            const levels = existing?.levels || { 1: { stamps: new Array(STAMPS_PER_LEVEL).fill(null), milestones: [m1, m2, m3] } };
+            if (levels[currentLevel]) levels[currentLevel].milestones = [m1, m2, m3];
             newChildren.push({
                 id, name, subtitle, color, avatar, currentLevel,
                 seenAvatarCount: existing?.seenAvatarCount || 15,
@@ -827,7 +849,7 @@
         try {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) { const p = JSON.parse(saved); if (p.children?.length) { msg += '\n⚠️ 此裝置目前已有資料（將被覆蓋）\n'; } }
-        } catch(e){}
+        } catch (e) { }
         if (!confirm(msg)) return;
         localStorage.setItem(STORAGE_KEY, JSON.stringify({ children: state.children }));
         window.location.href = window.location.origin + window.location.pathname;
@@ -854,15 +876,15 @@
         const container = document.getElementById('star-burst-container');
         for (let i = 0; i < 15; i++) {
             const star = document.createElement('div'); star.textContent = '⭐';
-            star.style.cssText = 'position:fixed;left:50%;top:50%;pointer-events:none;z-index:9999;font-size:' + (Math.random()*20+10) + 'px;';
+            star.style.cssText = 'position:fixed;left:50%;top:50%;pointer-events:none;z-index:9999;font-size:' + (Math.random() * 20 + 10) + 'px;';
             container.appendChild(star);
-            const a = Math.random()*Math.PI*2, v = Math.random()*100+50;
-            star.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${Math.cos(a)*v}px,${Math.sin(a)*v}px) scale(0)`,opacity:0}],{duration:1000,easing:'ease-out'}).onfinish = () => star.remove();
+            const a = Math.random() * Math.PI * 2, v = Math.random() * 100 + 50;
+            star.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${Math.cos(a) * v}px,${Math.sin(a) * v}px) scale(0)`, opacity: 0 }], { duration: 1000, easing: 'ease-out' }).onfinish = () => star.remove();
         }
-        setTimeout(() => window.open('https://github.com/CocoChang928/Reward_Chart','_blank'), 600);
+        setTimeout(() => window.open('https://github.com/CocoChang928/Reward_Chart', '_blank'), 600);
     }
     async function fetchGithubStars() {
-        try { const r = await fetch('https://api.github.com/repos/CocoChang928/Reward_Chart'); if (r.ok) { const d = await r.json(); const el = document.querySelector('.github-star-btn .star-text'); if (el) el.textContent = `GitHub ⭐ ${d.stargazers_count??0}`; } } catch(e){}
+        try { const r = await fetch('https://api.github.com/repos/CocoChang928/Reward_Chart'); if (r.ok) { const d = await r.json(); const el = document.querySelector('.github-star-btn .star-text'); if (el) el.textContent = `GitHub ⭐ ${d.stargazers_count ?? 0}`; } } catch (e) { }
     }
 
     // ===== PDF Export =====
@@ -881,7 +903,7 @@
             if (!allStamps.length) { listHtml = '<p style="color:#999;font-style:italic;">尚未獲得任何印章</p>'; }
             else {
                 listHtml = '<table style="width:100%;border-collapse:collapse;font-size:0.9rem;"><tr style="background:#fff3e0;"><th style="padding:6px 10px;text-align:left;border-bottom:2px solid #ffe0b2;">關卡</th><th style="padding:6px 10px;text-align:left;border-bottom:2px solid #ffe0b2;">#</th><th style="padding:6px 10px;text-align:left;border-bottom:2px solid #ffe0b2;">日期時間</th><th style="padding:6px 10px;text-align:left;border-bottom:2px solid #ffe0b2;">蓋章原因</th></tr>';
-                allStamps.forEach(s => { listHtml += `<tr style="border-bottom:1px solid #f5f5f5;"><td style="padding:5px 10px;color:#666;white-space:nowrap;">第${s.level}關</td><td style="padding:5px 10px;color:#ff8f00;font-weight:bold;white-space:nowrap;">⭐ 第${s.index+1}格</td><td style="padding:5px 10px;color:#666;white-space:nowrap;">${s.time||'未記錄'}</td><td style="padding:5px 10px;">${s.reason||'未記錄原因'}</td></tr>`; });
+                allStamps.forEach(s => { listHtml += `<tr style="border-bottom:1px solid #f5f5f5;"><td style="padding:5px 10px;color:#666;white-space:nowrap;">第${s.level}關</td><td style="padding:5px 10px;color:#ff8f00;font-weight:bold;white-space:nowrap;">⭐ 第${s.index + 1}格</td><td style="padding:5px 10px;color:#666;white-space:nowrap;">${s.time || '未記錄'}</td><td style="padding:5px 10px;">${s.reason || '未記錄原因'}</td></tr>`; });
                 listHtml += '</table>';
             }
             const sec = document.createElement('div');
@@ -890,7 +912,7 @@
             rpt.appendChild(sec);
         });
         document.body.appendChild(rpt);
-        html2pdf().set({ margin:0.3, filename:'Reward_Charts_Report.pdf', image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2,useCORS:true}, jsPDF:{unit:'in',format:'a4',orientation:'portrait'} }).from(rpt).save().then(() => rpt.remove());
+        html2pdf().set({ margin: 0.3, filename: 'Reward_Charts_Report.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } }).from(rpt).save().then(() => rpt.remove());
     }
 
     // ===== Utils =====
@@ -900,9 +922,9 @@
         document.getElementById('celebration-overlay').classList.add('active');
         for (let i = 0; i < 30; i++) {
             let c = document.createElement('div'); c.className = 'confetti';
-            c.style.left = Math.random()*100+'vw';
-            c.style.backgroundColor = ['#ff6b9d','#ffd54f','#81c784','#64b5f6'][Math.floor(Math.random()*4)];
-            c.style.animationDuration = (2+Math.random()*3)+'s';
+            c.style.left = Math.random() * 100 + 'vw';
+            c.style.backgroundColor = ['#ff6b9d', '#ffd54f', '#81c784', '#64b5f6'][Math.floor(Math.random() * 4)];
+            c.style.animationDuration = (2 + Math.random() * 3) + 's';
             document.body.appendChild(c);
             setTimeout(() => c.remove(), 5000);
         }
